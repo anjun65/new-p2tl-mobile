@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:p2tl/shared/theme.dart';
 import 'package:flutter/material.dart';
@@ -29,11 +30,11 @@ class ImageShow extends StatelessWidget {
           const SizedBox(
             height: 8.0,
           ),
-          if (content != '')
+          if (content != 'null')
             Center(
               child: Container(
                 height: 300,
-                child: Image.memory(base64.decode(content.split(',').last)),
+                child: Image.file(File(content)),
               ),
             ),
         ],

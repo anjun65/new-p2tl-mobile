@@ -41,6 +41,8 @@ class WorkModel {
   String? image;
   String? video;
   String? labor;
+  String? isLuar;
+  int? newWork;
 
   WorkModel({
     this.id,
@@ -85,6 +87,8 @@ class WorkModel {
     this.image,
     this.video,
     this.labor,
+    this.isLuar,
+    this.newWork,
   });
 
   WorkModel.fromJson(Map<String, dynamic> json) {
@@ -130,6 +134,8 @@ class WorkModel {
     image = json['image'].toString();
     video = json['video'].toString();
     labor = json['labor'].toString();
+    isLuar = json['isLuar'].toString();
+    newWork = json['newWork'];
   }
 
   Map<String, dynamic> toJson() {
@@ -176,6 +182,8 @@ class WorkModel {
       'image': image,
       'video': video,
       'labor': labor,
+      'isLuar': isLuar,
+      'newWork': newWork,
     };
   }
 }

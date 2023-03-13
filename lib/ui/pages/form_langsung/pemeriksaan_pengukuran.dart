@@ -6,10 +6,10 @@ import 'package:p2tl/ui/pages/form_langsung/wiring_app.dart';
 import 'package:p2tl/ui/widgets/buttons.dart';
 import 'package:p2tl/ui/widgets/forms.dart';
 import 'package:p2tl/ui/widgets/header.dart';
-import 'package:p2tl/ui/widgets/text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'dart:convert';
+
+import 'package:path_provider/path_provider.dart';
 
 class PemeriksaanPengukuranFormLangsungPage extends StatefulWidget {
   final WorkModel work;
@@ -47,10 +47,23 @@ class _PemeriksaanPengukuranFormLangsungPage
 
   XFile? selectedImage;
 
+  String? imagePath;
+
   selectImage() async {
     final imagePicker = ImagePicker();
     final XFile? image = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image!.saveTo(file.path);
+
+    imagePath = '$path/$filename.jpg';
 
     if (image != null) {
       setState(() {
@@ -289,22 +302,22 @@ class _PemeriksaanPengukuranFormLangsungPage
                               'pemeriksaan_cos_1': cos1Controller.text,
                               'pemeriksaan_cos_2': cos2Controller.text,
                               'pemeriksaan_cos_3': cos3Controller.text,
-                              'pemeriksaan_akurasi':
-                                  akurasiController.text.isEmpty,
-                              'pemeriksaan_foto_sebelum':
-                                  'data:image/png;base64,' +
-                                      base64Encode(File(selectedImage!.path)
-                                          .readAsBytesSync()),
+                              'pemeriksaan_akurasi': akurasiController.text,
+                              'pemeriksaan_foto_sebelum': imagePath,
                             });
 
                             if (item != 0) {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (builder) {
-                                return WiringAppFormLangsungPage(
-                                  work: widget.work,
-                                  id: widget.id,
-                                );
-                              }));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (builder) {
+                                    return WiringAppFormLangsungPage(
+                                      work: widget.work,
+                                      id: widget.id,
+                                    );
+                                  },
+                                ),
+                              );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(

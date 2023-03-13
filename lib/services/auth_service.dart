@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:p2tl/models/database_instance.dart';
 import 'package:p2tl/models/sign_in_form_model.dart';
 import 'package:p2tl/models/user_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -7,8 +8,6 @@ import 'package:http/http.dart' as http;
 
 class AuthService {
   final String baseUrl = 'https://new.momen-kita.com/api';
-
-  // final String baseUrl = 'https://bwabank.my.id/api';
 
   Future<UserModel> login(SignInFormModel data) async {
     try {
@@ -51,6 +50,8 @@ class AuthService {
 
       if (res.statusCode == 200) {
         await clearLocalStorage();
+        DatabaseInstance databaseInstance = DatabaseInstance();
+        final res = await databaseInstance.deleteAll();
       } else {
         throw jsonDecode(res.body)['message'];
       }
@@ -136,6 +137,10 @@ class AuthService {
     try {
       const storage = FlutterSecureStorage();
       await storage.deleteAll();
+
+      // DatabaseInstance databaseInstance = DatabaseInstance();
+      // databaseInstance.database();
+      // await databaseInstance.deleteAll();
     } catch (e) {
       rethrow;
     }

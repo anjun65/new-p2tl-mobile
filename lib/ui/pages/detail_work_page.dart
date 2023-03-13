@@ -51,11 +51,23 @@ class _DetailWorkPageState extends State<DetailWorkPage> {
   String? selectedStatus;
 
   XFile? selectedImage;
+  String? image_path;
 
   selectImage() async {
     final imagePicker = ImagePicker();
     final XFile? image = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image!.saveTo(file.path);
+
+    image_path = '$path/$filename.jpg';
 
     if (image != null) {
       setState(() {
@@ -123,6 +135,29 @@ class _DetailWorkPageState extends State<DetailWorkPage> {
 
     getRoles();
 
+    // if (widget.work.keteranganP2tl != null) {
+    //   setState(() {
+    //     selectedStatus = widget.work.keteranganP2tl;
+    //   });
+    // }
+
+    // if (widget.work. image != null) {
+    //   setState(() {
+    //     selectedImage = XFile(widget.work.image!);
+    //   });
+    // }
+
+    // if (widget.work.video != null) {
+    //   selectedVideo = XFile(widget.work.video!);
+    //   setState(() {
+    //     _controller = VideoPlayerController.file(File(widget.work.video!))
+    //       ..initialize().then((_) {
+    //         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+    //         setState(() {});
+    //       });
+    //   });
+    // }
+
     // selectedStatus = widget.work.keteranganP2tl ?? status![0];
     // if (widget.work.image != null) {
     //   Uint8List image = base64.decode(widget.work.image!);
@@ -135,7 +170,7 @@ class _DetailWorkPageState extends State<DetailWorkPage> {
   }
 
   bool validate() {
-    if (selectedImage == null) {
+    if (selectedImage == null || selectedVideo == null) {
       return false;
     }
 
@@ -176,6 +211,9 @@ class _DetailWorkPageState extends State<DetailWorkPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CustomTextField(
+                          title: 'Nomor BA',
+                          content: widget.work.id.toString().padLeft(5, '0')),
+                      CustomTextField(
                           title: 'Latitude',
                           content: widget.work.latitude.toString()),
                       CustomTextField(
@@ -194,6 +232,10 @@ class _DetailWorkPageState extends State<DetailWorkPage> {
                           title: 'fkm', content: widget.work.fkm.toString()),
                       CustomTextField(
                           title: 'rbm', content: widget.work.rbm.toString()),
+
+                      CustomTextField(
+                          title: 'Jenis P2TL',
+                          content: widget.work.jenis_p2tl.toString()),
 
                       CustomTextField(
                           title: 'P1', content: widget.work.P1.toString()),
@@ -435,9 +477,7 @@ class _DetailWorkPageState extends State<DetailWorkPage> {
                                 .update(widget.work!.id!, {
                               'keterangan_p2tl': selectedStatus,
                               'alasan': alasanController.text,
-                              'image': 'data:image/png;base64,' +
-                                  base64Encode(File(selectedImage!.path)
-                                      .readAsBytesSync()),
+                              'image': image_path,
                               'video': video_path,
                             });
 
@@ -662,7 +702,7 @@ class _DetailWorkPageState extends State<DetailWorkPage> {
           ),
           Column(
             children: [
-              roles == 'PETUGAS LAPANGAN'
+              roles == 'PETUGAS LAPANGAN' && widget.work.jenis_p2tl != '3TL'
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -670,25 +710,31 @@ class _DetailWorkPageState extends State<DetailWorkPage> {
                           iconUrl: 'assets/ic_add.png',
                           title: 'Tambah BA\n Langsung',
                           onTap: () async {
-                            LangsungModel item = await databaseInstance
-                                .searchFormLangsung(widget.work!.id!);
+                            if (widget.work.works_id != null) {
+                              LangsungModel item = await databaseInstance
+                                  .searchFormLangsung(widget.work!.works_id!);
 
-                            if (item != null) {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (builder) {
-                                return SaksiFormLangsungPage(
-                                  work: widget.work,
-                                  langsung: item,
-                                );
-                              }));
+                              if (item != null) {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (builder) {
+                                  return SaksiFormLangsungPage(
+                                    work: widget.work,
+                                    langsung: item,
+                                  );
+                                }));
+                              }
                             }
 
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (builder) {
-                              return SaksiFormLangsungPage(
-                                work: widget.work,
-                              );
-                            }));
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (builder) {
+                                  return SaksiFormLangsungPage(
+                                    work: widget.work,
+                                  );
+                                },
+                              ),
+                            );
                           },
                         ),
                         HomeServiceItem(
@@ -696,7 +742,8 @@ class _DetailWorkPageState extends State<DetailWorkPage> {
                           title: 'Lihat BA\nLangsung',
                           onTap: () async {
                             LangsungModel item = await databaseInstance
-                                .searchFormLangsung(widget.work!.id!);
+                                .searchFormLangsung(widget.work!.works_id!);
+
                             if (item != LangsungModel()) {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (builder) {
@@ -723,7 +770,7 @@ class _DetailWorkPageState extends State<DetailWorkPage> {
               const SizedBox(
                 height: 12.0,
               ),
-              roles == 'PETUGAS LAPANGAN'
+              roles == 'PETUGAS LAPANGAN' && widget.work.jenis_p2tl == '3TL'
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -731,6 +778,20 @@ class _DetailWorkPageState extends State<DetailWorkPage> {
                           iconUrl: 'assets/ic_add.png',
                           title: 'Tambah BA\nTidak Langsung',
                           onTap: () async {
+                            TidakLangsungModel item =
+                                await databaseInstance.searchFormTidakLangsung(
+                                    widget.work!.works_id!);
+
+                            if (item != null) {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return SaksiFormTidakLangsungPage(
+                                  work: widget.work,
+                                  langsung: item,
+                                );
+                              }));
+                            }
+
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (builder) {
                               return SaksiFormTidakLangsungPage(
@@ -743,8 +804,9 @@ class _DetailWorkPageState extends State<DetailWorkPage> {
                           iconUrl: 'assets/ic_view.png',
                           title: 'Lihat BA\nTidak Langsung',
                           onTap: () async {
-                            TidakLangsungModel item = await databaseInstance
-                                .searchFormTidakLangsung(widget.work!.id!);
+                            TidakLangsungModel item =
+                                await databaseInstance.searchFormTidakLangsung(
+                                    widget.work!.works_id!);
 
                             if (item != null) {
                               Navigator.push(context,
@@ -780,6 +842,19 @@ class _DetailWorkPageState extends State<DetailWorkPage> {
                           iconUrl: 'assets/ic_add.png',
                           title: 'Tambah BA\nKalibrasi',
                           onTap: () async {
+                            KalibrasiModel item = await databaseInstance
+                                .searchFormKalibrasi(widget.work!.works_id!);
+
+                            if (item != null) {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return SaksiFormKalibrasiPage(
+                                  work: widget.work,
+                                  kalibrasi: item,
+                                );
+                              }));
+                            }
+
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (builder) {
                               return SaksiFormKalibrasiPage(
@@ -793,7 +868,7 @@ class _DetailWorkPageState extends State<DetailWorkPage> {
                           title: 'Lihat BA\nKalibrasi',
                           onTap: () async {
                             KalibrasiModel item = await databaseInstance
-                                .searchFormKalibrasi(widget.work!.id!);
+                                .searchFormKalibrasi(widget.work!.works_id!);
 
                             if (item != null) {
                               Navigator.push(context,
@@ -829,6 +904,19 @@ class _DetailWorkPageState extends State<DetailWorkPage> {
                           iconUrl: 'assets/ic_add.png',
                           title: 'Tambah BA \nPengambilan BB',
                           onTap: () async {
+                            PengambilanModel item = await databaseInstance
+                                .searchFormPengambilan(widget.work!.works_id!);
+
+                            if (item != null) {
+                              print('already');
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return SaksiFormBarangBuktiPage(
+                                  work: widget.work,
+                                  pengambilan: item,
+                                );
+                              }));
+                            }
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (builder) {
                               return SaksiFormBarangBuktiPage(
@@ -842,8 +930,7 @@ class _DetailWorkPageState extends State<DetailWorkPage> {
                           title: 'Lihat BA\nPengambilan BB',
                           onTap: () async {
                             PengambilanModel item = await databaseInstance
-                                .searchFormPengambilan(widget.work!.id!);
-
+                                .searchFormPengambilan(widget.work!.works_id!);
                             if (item != null) {
                               Navigator.push(
                                 context,

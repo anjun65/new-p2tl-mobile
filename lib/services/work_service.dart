@@ -164,10 +164,7 @@ class WorkService {
       DatabaseInstance databaseInstance = DatabaseInstance();
 
       final res = await databaseInstance.all();
-      print('TTTTTTTTTTTTTTTTTTTTTTTTTT');
       List<WorkModel> works = res;
-      print(works);
-      print('TTTTTTTTTTTTTTTTTTTTTTTTTT');
       return works;
     } catch (e) {
       rethrow;

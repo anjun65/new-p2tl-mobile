@@ -15,6 +15,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:video_player/video_player.dart';
+
 class LihatFormTidakLangsungPage extends StatefulWidget {
   final WorkModel work;
   final TidakLangsungModel? langsung;
@@ -30,6 +32,19 @@ class LihatFormTidakLangsungPage extends StatefulWidget {
 
 class _LihatFormTidakLangsungPageState
     extends State<LihatFormTidakLangsungPage> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    _controller = VideoPlayerController.file(
+        File(widget.langsung!.akhir_kesimpulan_video!))
+      ..initialize().then((_) {
+        setState(() {});
+      });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1199,6 +1214,16 @@ class _LihatFormTidakLangsungPageState
                         height: 12.0,
                       ),
 
+                      CustomTextField(
+                        title: 'Apakah ada temuan?',
+                        content: widget.langsung!.akhir_temuan ?? '-',
+                      ),
+
+                      CustomTextField(
+                        title: 'Apakah diteruskan ke lab?',
+                        content: widget.langsung!.akhir_labor ?? '-',
+                      ),
+
                       CustomTextKeterangan(
                         title: 'Hasil Pemeriksaan',
                         content:
@@ -1208,6 +1233,40 @@ class _LihatFormTidakLangsungPageState
                       CustomTextKeterangan(
                         title: 'Kesimpulan Hasil Pemeriksaan',
                         content: widget.langsung!.akhir_kesimpulan ?? '-',
+                      ),
+
+                      Text(
+                        'Video',
+                        style: blackTextStyle.copyWith(
+                          fontWeight: medium,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 12.0,
+                      ),
+                      _controller.value.isInitialized && _controller != null
+                          ? AspectRatio(
+                              aspectRatio: _controller.value.aspectRatio,
+                              child: VideoPlayer(_controller),
+                            )
+                          : Container(),
+                      Center(
+                        child: IconButton(
+                          icon: Icon(
+                            _controller.value.isPlaying
+                                ? Icons.pause
+                                : Icons.play_arrow,
+                            size: 30,
+                          ),
+                          color: Colors.blue,
+                          onPressed: () {
+                            setState(() {
+                              _controller.value.isPlaying
+                                  ? _controller.pause()
+                                  : _controller.play();
+                            });
+                          },
+                        ),
                       ),
 
                       CustomTextKeterangan(

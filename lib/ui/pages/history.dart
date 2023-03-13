@@ -28,6 +28,20 @@ class HistoryPage extends StatelessWidget {
             child: BlocBuilder<WorkBloc, WorkState>(
               builder: (context, state) {
                 if (state is WorkSuccess) {
+                  if (state.works.length == 0) {
+                    return Container(
+                      height: 200,
+                      child: Center(
+                        child: Text(
+                          'History Masih Kosong\n',
+                          style: blackTextStyle.copyWith(
+                            fontSize: 14,
+                            fontWeight: semiBold,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
                   return Column(
                     children: state.works.map((work) {
                       return GestureDetector(

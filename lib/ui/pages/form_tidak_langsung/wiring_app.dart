@@ -8,12 +8,10 @@ import 'package:p2tl/ui/pages/form_tidak_langsung/pemeriksaan_pengukuran.dart';
 import 'package:p2tl/ui/widgets/buttons.dart';
 import 'package:p2tl/ui/widgets/forms.dart';
 import 'package:p2tl/ui/widgets/header.dart';
-import 'package:p2tl/ui/widgets/text.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:io';
-import 'dart:convert';
 import 'package:signature/signature.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class WiringAppFormTidakLangsungPage extends StatefulWidget {
   final WorkModel work;
@@ -58,10 +56,23 @@ class _WiringAppFormTidakLangsungPage
 
   XFile? selectedImage;
 
+  String? imagePath;
+
   selectImage() async {
     final imagePicker = ImagePicker();
     final XFile? image = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image!.saveTo(file.path);
+
+    imagePath = '$path/$filename.jpg';
 
     if (image != null) {
       setState(() {
@@ -139,48 +150,59 @@ class _WiringAppFormTidakLangsungPage
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CustomFormField(
-                        title: 'Terminal 1 kWh Meter Tehubung dengan',
+                        title: 'Terminal 1 kWh Meter Terhubung dengan',
                         controller: terminal1,
+                        keyboardType: TextInputType.number,
                       ),
                       CustomFormField(
-                        title: 'Terminal 2 kWh Meter Tehubung dengan',
+                        title: 'Terminal 2 kWh Meter Terhubung dengan',
                         controller: terminal2,
+                        keyboardType: TextInputType.number,
                       ),
                       CustomFormField(
-                        title: 'Terminal 3 kWh Meter Tehubung dengan',
+                        title: 'Terminal 3 kWh Meter Terhubung dengan',
                         controller: terminal3,
+                        keyboardType: TextInputType.number,
                       ),
                       CustomFormField(
-                        title: 'Terminal 4 kWh Meter Tehubung dengan',
+                        title: 'Terminal 4 kWh Meter Terhubung dengan',
                         controller: terminal4,
+                        keyboardType: TextInputType.number,
                       ),
                       CustomFormField(
-                        title: 'Terminal 5 kWh Meter Tehubung dengan',
+                        title: 'Terminal 5 kWh Meter Terhubung dengan',
                         controller: terminal5,
+                        keyboardType: TextInputType.number,
                       ),
                       CustomFormField(
-                        title: 'Terminal 6 kWh Meter Tehubung dengan',
+                        title: 'Terminal 6 kWh Meter Terhubung dengan',
                         controller: terminal6,
+                        keyboardType: TextInputType.number,
                       ),
                       CustomFormField(
-                        title: 'Terminal 7 kWh Meter Tehubung dengan',
+                        title: 'Terminal 7 kWh Meter Terhubung dengan',
                         controller: terminal7,
+                        keyboardType: TextInputType.number,
                       ),
                       CustomFormField(
-                        title: 'Terminal 8 kWh Meter Tehubung dengan',
+                        title: 'Terminal 8 kWh Meter Terhubung dengan',
                         controller: terminal8,
+                        keyboardType: TextInputType.number,
                       ),
                       CustomFormField(
-                        title: 'Terminal 9 kWh Meter Tehubung dengan',
+                        title: 'Terminal 9 kWh Meter Terhubung dengan',
                         controller: terminal9,
+                        keyboardType: TextInputType.number,
                       ),
                       CustomFormField(
-                        title: 'Terminal 11 kWh Meter Tehubung dengan',
+                        title: 'Terminal 11 kWh Meter Terhubung dengan',
                         controller: terminal11,
+                        keyboardType: TextInputType.number,
                       ),
                       CustomFormField(
                         title: 'Nilai Pentanahan/Grounding ',
                         controller: groundController,
+                        keyboardType: TextInputType.number,
                       ),
                       CustomFormField(
                         title: 'Keterangan',
@@ -297,11 +319,37 @@ class _WiringAppFormTidakLangsungPage
                         title: 'Submit',
                         onPressed: () async {
                           if (validate()) {
+                            final directory =
+                                await getApplicationDocumentsDirectory();
+                            final path = directory.path;
+
+                            final filename = DateTime.now()
+                                .millisecondsSinceEpoch
+                                .toString();
+
+                            final file = File('$path/$filename.png');
                             final Uint8List? data = await _controller
                                 .toPngBytes(height: 300, width: 300);
 
-                            final imageEncoded =
-                                'data:image/png;base64,' + base64.encode(data!);
+                            await file.writeAsBytes(data!);
+
+                            var SignaturePath = '$path/$filename.png';
+                            // final directory =
+                            //     await getApplicationDocumentsDirectory();
+                            // final path = directory.path;
+
+                            // final filename = DateTime.now()
+                            //     .millisecondsSinceEpoch
+                            //     .toString();
+
+                            // final file = File('$path/$filename.png');
+
+                            // final Uint8List? data = await _controller
+                            //     .toPngBytes(height: 300, width: 300);
+
+                            // var signature = await file.writeAsBytes(data!);
+                            // // Copy the video file to the new file
+                            // await signature!.saveTo(file.path);
 
                             var item = await databaseInstance
                                 .updateFormTidakLangsung(widget.id, {
@@ -317,10 +365,8 @@ class _WiringAppFormTidakLangsungPage
                               'wiring_terminal11': terminal11.text,
                               'wiring_grounding': groundController.text,
                               'wiring_keterangan': keterangan_wiring_app.text,
-                              'wiring_diagram': imageEncoded,
-                              'wiring_foto': 'data:image/png;base64,' +
-                                  base64Encode(File(selectedImage!.path)
-                                      .readAsBytesSync()),
+                              'wiring_diagram': SignaturePath,
+                              'wiring_foto': imagePath,
                             });
 
                             if (item != 0) {
@@ -328,7 +374,7 @@ class _WiringAppFormTidakLangsungPage
                                   MaterialPageRoute(builder: (builder) {
                                 return PemeriksaanPengukuranFormTidakLangsungPage(
                                   work: widget.work,
-                                  id: 1,
+                                  id: item,
                                 );
                               }));
                             } else {

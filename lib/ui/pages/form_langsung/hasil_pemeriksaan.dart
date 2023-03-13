@@ -10,6 +10,9 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:path_provider/path_provider.dart';
+import 'package:video_player/video_player.dart';
+
 class HasilPemeriksaanFormLangsungPage extends StatefulWidget {
   final WorkModel work;
   final int id;
@@ -27,6 +30,7 @@ class HasilPemeriksaanFormLangsungPage extends StatefulWidget {
 
 class _HasilPemeriksaanFormLangsungPage
     extends State<HasilPemeriksaanFormLangsungPage> {
+  late VideoPlayerController _controller;
   DatabaseInstance databaseInstance = DatabaseInstance();
 
   TextEditingController hasilController = TextEditingController();
@@ -35,17 +39,66 @@ class _HasilPemeriksaanFormLangsungPage
   TextEditingController barangBuktiController = TextEditingController();
   TextEditingController tanggalController = TextEditingController();
   bool isTeruskan = false;
+  bool isTemuan = false;
 
   XFile? selectedImage;
+
+  String? imagePath;
 
   selectImage() async {
     final imagePicker = ImagePicker();
     final XFile? image = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
 
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image!.saveTo(file.path);
+
+    imagePath = '$path/$filename.jpg';
+
     if (image != null) {
       setState(() {
         selectedImage = image;
+      });
+    }
+  }
+
+  XFile? selectedVideo;
+  String? video_path = '';
+
+  selectVideo() async {
+    final imagePicker = ImagePicker();
+    final XFile? video = await imagePicker.pickVideo(
+      source: ImageSource.camera,
+      maxDuration: Duration(seconds: 15),
+    );
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    // Create a new file with a unique name
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.mp4');
+
+    // Copy the video file to the new file
+    await video!.saveTo(file.path);
+
+    video_path = '$path/$filename.mp4';
+
+    if (video != null) {
+      _controller = VideoPlayerController.file(file)
+        ..initialize().then((_) {
+          // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+          setState(() {});
+        });
+
+      setState(() {
+        selectedVideo = video;
       });
     }
   }
@@ -113,6 +166,72 @@ class _HasilPemeriksaanFormLangsungPage
                         controller: kesimpulanController,
                         maxLinesText: 4,
                       ),
+                      const SizedBox(
+                        height: 12.0,
+                      ),
+                      Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Upload Video Kesimpulan',
+                              style: blackTextStyle.copyWith(
+                                fontWeight: medium,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 12.0,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                selectVideo();
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
+                                child: selectedVideo != null
+                                    ? Column(
+                                        children: [
+                                          AspectRatio(
+                                            aspectRatio:
+                                                _controller.value.aspectRatio,
+                                            child: VideoPlayer(_controller),
+                                          ),
+                                          Center(
+                                            child: IconButton(
+                                              icon: Icon(
+                                                _controller.value.isPlaying
+                                                    ? Icons.pause
+                                                    : Icons.play_arrow,
+                                                size: 30,
+                                              ),
+                                              color: Colors.blue,
+                                              onPressed: () {
+                                                setState(() {
+                                                  _controller.value.isPlaying
+                                                      ? _controller.pause()
+                                                      : _controller.play();
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : Container(
+                                        height: 100,
+                                        child: Center(
+                                          child: Image.asset(
+                                            'assets/ic_upload.png',
+                                            width: 32,
+                                          ),
+                                        ),
+                                      ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       CustomFormField(
                         title: 'Tindakan yang Dilakukan',
                         controller: tindakanController,
@@ -139,6 +258,49 @@ class _HasilPemeriksaanFormLangsungPage
                                 setState(() {
                                   isTeruskan = value!;
                                 });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        child: Row(
+                          children: [
+                            Text(
+                              'Apakah ada temuan?',
+                              style: blackTextStyle.copyWith(
+                                fontWeight: medium,
+                              ),
+                            ),
+                            const Spacer(),
+                            Checkbox(
+                              value: this.isTemuan,
+                              onChanged: (value) {
+                                setState(() {
+                                  isTemuan = value!;
+                                });
+
+                                if (isTemuan == true) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (ctx) => AlertDialog(
+                                      title: const Text("Ada temuan"),
+                                      content: const Text(
+                                          "Silahkan isi borang basah!"),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(ctx).pop();
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.all(14),
+                                            child: const Text("Oke"),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
                               },
                             ),
                           ],
@@ -238,10 +400,10 @@ class _HasilPemeriksaanFormLangsungPage
                               'akhir_barang_bukti': barangBuktiController.text,
                               'akhir_tanggal_penyelesaian':
                                   tanggalController.text,
-                              'akhir_foto_barang_bukti':
-                                  'data:image/png;base64,' +
-                                      base64Encode(File(selectedImage!.path)
-                                          .readAsBytesSync()),
+                              'akhir_foto_barang_bukti': imagePath,
+                              'akhir_labor': isTeruskan,
+                              'akhir_temuan': isTemuan,
+                              'akhir_kesimpulan_video': video_path,
                             });
 
                             if (item != 0) {

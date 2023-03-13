@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:p2tl/blocs/work/bloc/work_bloc.dart';
+import 'package:p2tl/models/langsung_model.dart';
 import 'package:p2tl/models/work_online_model.dart';
+import 'package:p2tl/services/auth_service.dart';
+import 'package:p2tl/services/langsung_service.dart';
 import 'package:p2tl/shared/helpers.dart';
 import 'package:p2tl/shared/theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:p2tl/ui/pages/history/langsung_page.dart';
+import 'package:p2tl/ui/widgets/HomeServiceItem.dart';
 import 'package:p2tl/ui/widgets/header.dart';
 import 'package:p2tl/ui/widgets/image_network.dart';
 import 'package:p2tl/ui/widgets/keterangan.dart';
@@ -25,16 +30,29 @@ class HistoryDetailPage extends StatefulWidget {
 
 class _HistoryDetailPageState extends State<HistoryDetailPage> {
   late VideoPlayerController _controller;
+  String? roles;
+
+  Future<void> getRoles() async {
+    var new_roles = await AuthService().getRoles();
+
+    setState(() {
+      roles = new_roles;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(
-        'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4')
-      ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
-      });
+        'https://new.momen-kita.com/storage/${widget.work!.video}')
+      ..initialize().then(
+        (_) {
+          // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+          setState(() {});
+        },
+      );
+
+    getRoles();
   }
 
   @override
@@ -83,6 +101,9 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                       CustomTextField(
                           title: 'Tarif',
                           content: widget.work.tarif.toString()),
+                      CustomTextField(
+                          title: 'Jenis P2TL',
+                          content: widget.work.jenis_p2tl.toString()),
                       CustomTextField(
                           title: 'daya', content: widget.work.daya.toString()),
                       CustomTextField(
@@ -174,6 +195,61 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                           },
                         ),
                       ),
+                      Column(
+                        children: [
+                          widget.work.jenis_p2tl != '3TL'
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    HomeServiceItem(
+                                      iconUrl: 'assets/ic_view.png',
+                                      title: 'Lihat BA Langsung',
+                                      onTap: () async {
+                                        LangsungModel item =
+                                            await LangsungService()
+                                                .getLangsung(widget.work.id!);
+
+                                        if (item != null) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (builder) {
+                                                return LangsungFormLangsungPage(
+                                                  work: widget.work,
+                                                  langsung: item,
+                                                );
+                                              },
+                                            ),
+                                          );
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: const Text(
+                                                'Data tidak dapat ditemukan, Silahkan hubungi admin',
+                                              ),
+                                              backgroundColor: redColor,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                )
+                              : Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    HomeServiceItem(
+                                      iconUrl: 'assets/ic_view.png',
+                                      title: 'Lihat BA Tidak Langsung',
+                                      onTap: () async {},
+                                    ),
+                                  ],
+                                )
+                        ],
+                      )
                     ],
                   ),
                 ),

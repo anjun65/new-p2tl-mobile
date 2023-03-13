@@ -6,10 +6,10 @@ import 'package:p2tl/ui/pages/form_langsung/pemeriksaan_terminal.dart';
 import 'package:p2tl/ui/widgets/buttons.dart';
 import 'package:p2tl/ui/widgets/forms.dart';
 import 'package:p2tl/ui/widgets/header.dart';
-import 'package:p2tl/ui/widgets/text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'dart:convert';
+
+import 'package:path_provider/path_provider.dart';
 
 class PemeriksaanKwhMeterFormLangsungPage extends StatefulWidget {
   final WorkModel work;
@@ -36,10 +36,23 @@ class _PemeriksaanKwhMeterFormLangsungPage
 
   XFile? selectedImage;
 
+  String? imagePath;
+
   selectImage() async {
     final imagePicker = ImagePicker();
     final XFile? image = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image!.saveTo(file.path);
+
+    imagePath = '$path/$filename.jpg';
 
     if (image != null) {
       setState(() {
@@ -49,11 +62,23 @@ class _PemeriksaanKwhMeterFormLangsungPage
   }
 
   XFile? selectedImage2;
+  String? imagePath2;
 
   selectImage2() async {
     final imagePicker = ImagePicker();
     final XFile? image2 = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image2!.saveTo(file.path);
+
+    imagePath2 = '$path/$filename.jpg';
 
     if (image2 != null) {
       setState(() {
@@ -242,7 +267,7 @@ class _PemeriksaanKwhMeterFormLangsungPage
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              'Upload Foto kWh Meter',
+                              'Upload Foto Ketika Pemeriksaan',
                               style: blackTextStyle.copyWith(
                                 fontWeight: medium,
                               ),
@@ -381,7 +406,7 @@ class _PemeriksaanKwhMeterFormLangsungPage
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              'Upload Foto Alat Pembatas',
+                              'Upload Foto Sesudah Pemeriksaan',
                               style: blackTextStyle.copyWith(
                                 fontWeight: medium,
                               ),
@@ -437,16 +462,12 @@ class _PemeriksaanKwhMeterFormLangsungPage
                               'kwh_nomor_tahun_kode_segel':
                                   nomorTahunKodeController.text,
                               'kwh_keterangan': keteranganController.text,
-                              'kwh_foto_sebelum': 'data:image/png;base64,' +
-                                  base64Encode(File(selectedImage!.path)
-                                      .readAsBytesSync()),
+                              'kwh_foto_sebelum': imagePath,
                               'kwh_post_peralatan': selectedpost_peralatan,
                               'kwh_post_segel': selectedpost_segel,
                               'kwh_post_nomor_tahun_kode_segel':
                                   postTahunKodeController.text,
-                              'kwh_foto_sesudah': 'data:image/png;base64,' +
-                                  base64Encode(File(selectedImage2!.path)
-                                      .readAsBytesSync()),
+                              'kwh_foto_sesudah': imagePath2,
                             });
 
                             if (item != 0) {

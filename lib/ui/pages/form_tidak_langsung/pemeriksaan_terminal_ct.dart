@@ -6,10 +6,10 @@ import 'package:p2tl/ui/pages/form_tidak_langsung/pemeriksaan_pintu_gardu.dart';
 import 'package:p2tl/ui/widgets/buttons.dart';
 import 'package:p2tl/ui/widgets/forms.dart';
 import 'package:p2tl/ui/widgets/header.dart';
-import 'package:p2tl/ui/widgets/text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'dart:convert';
+
+import 'package:path_provider/path_provider.dart';
 
 class PemeriksaanTerminalCtFormTidakLangsungPage extends StatefulWidget {
   final WorkModel work;
@@ -36,10 +36,23 @@ class _PemeriksaanTerminalCtFormTidakLangsungPage
 
   XFile? selectedImage;
 
+  String? imagePath;
+
   selectImage() async {
     final imagePicker = ImagePicker();
     final XFile? image = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image!.saveTo(file.path);
+
+    imagePath = '$path/$filename.jpg';
 
     if (image != null) {
       setState(() {
@@ -49,11 +62,23 @@ class _PemeriksaanTerminalCtFormTidakLangsungPage
   }
 
   XFile? selectedImage2;
+  String? imagePath2;
 
   selectImage2() async {
     final imagePicker = ImagePicker();
     final XFile? image2 = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image2!.saveTo(file.path);
+
+    imagePath2 = '$path/$filename.jpg';
 
     if (image2 != null) {
       setState(() {
@@ -438,19 +463,13 @@ class _PemeriksaanTerminalCtFormTidakLangsungPage
                                   nomorTahunKodeController.text,
                               'terminal_ct_keterangan':
                                   keteranganController.text,
-                              'terminal_ct_foto_sebelum':
-                                  'data:image/png;base64,' +
-                                      base64Encode(File(selectedImage!.path)
-                                          .readAsBytesSync()),
+                              'terminal_ct_foto_sebelum': imagePath,
                               'terminal_ct_post_peralatan':
                                   selectedpost_peralatan,
                               'terminal_ct_post_segel': selectedpost_segel,
                               'terminal_ct_post_nomor_tahun_kode_segel':
                                   postTahunKodeController.text,
-                              'terminal_ct_foto_sesudah':
-                                  'data:image/png;base64,' +
-                                      base64Encode(File(selectedImage2!.path)
-                                          .readAsBytesSync()),
+                              'terminal_ct_foto_sesudah': imagePath2
                             });
 
                             if (item != 0) {

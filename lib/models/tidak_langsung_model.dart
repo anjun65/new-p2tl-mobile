@@ -165,6 +165,9 @@ class TidakLangsungModel {
   String? akhir_tanggal_penyelesaian;
   String? akhir_foto_barang_bukti;
   String? akhir_labor;
+  String? akhir_kesimpulan_video;
+  String? akhir_temuan;
+
   TidakLangsungModel({
     this.id,
     this.works_id,
@@ -332,6 +335,8 @@ class TidakLangsungModel {
     this.akhir_tanggal_penyelesaian,
     this.akhir_foto_barang_bukti,
     this.akhir_labor,
+    this.akhir_kesimpulan_video,
+    this.akhir_temuan,
   });
 
   TidakLangsungModel.fromJson(Map<String, dynamic> json) {
@@ -527,6 +532,8 @@ class TidakLangsungModel {
     akhir_tanggal_penyelesaian = json['akhir_tanggal_penyelesaian'].toString();
     akhir_foto_barang_bukti = json['akhir_foto_barang_bukti'].toString();
     akhir_labor = json['akhir_labor'].toString();
+    akhir_kesimpulan_video = json['akhir_kesimpulan_video'].toString();
+    akhir_temuan = json['akhir_temuan'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -709,6 +716,8 @@ class TidakLangsungModel {
     data['akhir_tanggal_penyelesaian'] = akhir_tanggal_penyelesaian;
     data['akhir_foto_barang_bukti'] = akhir_foto_barang_bukti;
     data['akhir_labor'] = akhir_labor;
+    data['akhir_kesimpulan_video'] = akhir_kesimpulan_video;
+    data['akhir_temuan'] = akhir_temuan;
 
     return data;
   }

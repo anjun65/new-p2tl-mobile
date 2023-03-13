@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:p2tl/models/database_instance.dart';
+import 'package:p2tl/models/kalibrasi_model.dart';
 import 'package:p2tl/models/work_model.dart';
 import 'package:p2tl/shared/theme.dart';
 import 'package:p2tl/ui/pages/kalibrasi/kwh_meter.dart';
@@ -11,10 +12,13 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:path_provider/path_provider.dart';
+
 class SaksiFormKalibrasiPage extends StatefulWidget {
   final WorkModel work;
+  final KalibrasiModel? kalibrasi;
 
-  const SaksiFormKalibrasiPage({Key? key, required this.work})
+  const SaksiFormKalibrasiPage({Key? key, required this.work, this.kalibrasi})
       : super(key: key);
 
   @override
@@ -33,10 +37,23 @@ class _SaksiFormKalibrasiPage extends State<SaksiFormKalibrasiPage> {
 
   XFile? selectedImage;
 
+  String? imagePath;
+
   selectImage() async {
     final imagePicker = ImagePicker();
     final XFile? image = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image!.saveTo(file.path);
+
+    imagePath = '$path/$filename.jpg';
 
     if (image != null) {
       setState(() {
@@ -168,21 +185,39 @@ class _SaksiFormKalibrasiPage extends State<SaksiFormKalibrasiPage> {
                                 base64Encode(File(selectedImage!.path)
                                     .readAsBytesSync());
                           }
+                          var item;
+                          if (widget.kalibrasi == null) {
+                            item = await databaseInstance.insertFormKalibrasi({
+                              'works_id': widget.work.works_id,
+                              'nama_saksi': nameController.text,
+                              'alamat_saksi': alamatController.text,
+                              'nomor_identitas': identitasController.text,
+                              'no_telpon_saksi': telponController.text,
+                              'pekerjaan': pekerjaanController.text,
+                              'foto_identitas': imagePath,
+                              'createdAt': DateTime.now()
+                                  .toIso8601String()
+                                  .split('T')
+                                  .first,
+                            });
+                          }
 
-                          var item =
-                              await databaseInstance.insertFormKalibrasi({
-                            'works_id': widget.work.id,
-                            'nama_saksi': nameController.text,
-                            'alamat_saksi': alamatController.text,
-                            'nomor_identitas': identitasController.text,
-                            'no_telpon_saksi': telponController.text,
-                            'pekerjaan': pekerjaanController.text,
-                            'foto_identitas': identitas_saksi,
-                            'createdAt': DateTime.now()
-                                .toIso8601String()
-                                .split('T')
-                                .first,
-                          });
+                          if (widget.kalibrasi != null) {
+                            var item = await databaseInstance
+                                .updateFormKalibrasi(widget.kalibrasi!.id!, {
+                              'works_id': widget.work.works_id,
+                              'nama_saksi': nameController.text,
+                              'alamat_saksi': alamatController.text,
+                              'nomor_identitas': identitasController.text,
+                              'no_telpon_saksi': telponController.text,
+                              'pekerjaan': pekerjaanController.text,
+                              'foto_identitas': imagePath,
+                              'createdAt': DateTime.now()
+                                  .toIso8601String()
+                                  .split('T')
+                                  .first,
+                            });
+                          }
 
                           Navigator.push(context,
                               MaterialPageRoute(builder: (builder) {

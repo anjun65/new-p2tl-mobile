@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:p2tl/models/database_instance.dart';
+import 'package:p2tl/models/tidak_langsung_model.dart';
 import 'package:p2tl/models/work_model.dart';
 import 'package:p2tl/shared/theme.dart';
-import 'package:p2tl/ui/pages/form_langsung/data_lama.dart';
 import 'package:p2tl/ui/pages/form_tidak_langsung/data_app.dart';
 import 'package:p2tl/ui/widgets/buttons.dart';
 import 'package:p2tl/ui/widgets/forms.dart';
 import 'package:p2tl/ui/widgets/header.dart';
-import 'package:p2tl/ui/widgets/text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'dart:convert';
+
+import 'package:path_provider/path_provider.dart';
 
 class SaksiFormTidakLangsungPage extends StatefulWidget {
   final WorkModel work;
 
-  const SaksiFormTidakLangsungPage({Key? key, required this.work})
+  final TidakLangsungModel? langsung;
+
+  const SaksiFormTidakLangsungPage(
+      {Key? key, required this.work, this.langsung})
       : super(key: key);
 
   @override
@@ -33,11 +36,23 @@ class _SaksiFormTidakLangsungPage extends State<SaksiFormTidakLangsungPage> {
   TextEditingController pekerjaanController = TextEditingController();
 
   XFile? selectedImage;
+  String? imagePath;
 
   selectImage() async {
     final imagePicker = ImagePicker();
     final XFile? image = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image!.saveTo(file.path);
+
+    imagePath = '$path/$filename.jpg';
 
     if (image != null) {
       setState(() {
@@ -165,9 +180,7 @@ class _SaksiFormTidakLangsungPage extends State<SaksiFormTidakLangsungPage> {
                           var identitas_saksi = null;
 
                           if (selectedImage != null) {
-                            identitas_saksi = 'data:image/png;base64,' +
-                                base64Encode(File(selectedImage!.path)
-                                    .readAsBytesSync());
+                            identitas_saksi = imagePath;
                           }
 
                           var item =

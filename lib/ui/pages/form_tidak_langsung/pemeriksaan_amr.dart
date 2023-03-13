@@ -6,10 +6,10 @@ import 'package:p2tl/ui/pages/form_tidak_langsung/pemeriksaan_terminal_vt.dart';
 import 'package:p2tl/ui/widgets/buttons.dart';
 import 'package:p2tl/ui/widgets/forms.dart';
 import 'package:p2tl/ui/widgets/header.dart';
-import 'package:p2tl/ui/widgets/text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'dart:convert';
+
+import 'package:path_provider/path_provider.dart';
 
 class PemeriksaanAmrFormTidakLangsungPage extends StatefulWidget {
   final WorkModel work;
@@ -36,10 +36,23 @@ class _PemeriksaanAmrFormTidakLangsungPage
 
   XFile? selectedImage;
 
+  String? imagePath;
+
   selectImage() async {
     final imagePicker = ImagePicker();
     final XFile? image = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image!.saveTo(file.path);
+
+    imagePath = '$path/$filename.jpg';
 
     if (image != null) {
       setState(() {
@@ -49,11 +62,23 @@ class _PemeriksaanAmrFormTidakLangsungPage
   }
 
   XFile? selectedImage2;
+  String? imagePath2;
 
   selectImage2() async {
     final imagePicker = ImagePicker();
     final XFile? image2 = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image2!.saveTo(file.path);
+
+    imagePath2 = '$path/$filename.jpg';
 
     if (image2 != null) {
       setState(() {
@@ -437,16 +462,12 @@ class _PemeriksaanAmrFormTidakLangsungPage
                               'amr_nomor_tahun_kode_segel':
                                   nomorTahunKodeController.text,
                               'amr_keterangan': keteranganController.text,
-                              'amr_foto_sebelum': 'data:image/png;base64,' +
-                                  base64Encode(File(selectedImage!.path)
-                                      .readAsBytesSync()),
+                              'amr_foto_sebelum': imagePath,
                               'amr_post_peralatan': selectedpost_peralatan,
                               'amr_post_segel': selectedpost_segel,
                               'amr_post_nomor_tahun_kode_segel':
                                   postTahunKodeController.text,
-                              'amr_foto_sesudah': 'data:image/png;base64,' +
-                                  base64Encode(File(selectedImage2!.path)
-                                      .readAsBytesSync()),
+                              'amr_foto_sesudah': imagePath2,
                             });
 
                             if (item != 0) {

@@ -1,42 +1,37 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:p2tl/models/database_instance.dart';
 import 'package:p2tl/models/langsung_model.dart';
-import 'package:p2tl/models/work_model.dart';
+import 'package:p2tl/models/work_online_model.dart';
 import 'package:p2tl/shared/theme.dart';
+import 'package:p2tl/ui/pages/form_langsung/data_lama.dart';
+import 'package:p2tl/ui/widgets/buttons.dart';
+import 'package:p2tl/ui/widgets/forms.dart';
 import 'package:p2tl/ui/widgets/header.dart';
 import 'package:p2tl/ui/widgets/image_show.dart';
 import 'package:p2tl/ui/widgets/keterangan.dart';
 import 'package:p2tl/ui/widgets/text.dart';
-import 'package:video_player/video_player.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'dart:convert';
 
-class LihatFormLangsungPage extends StatefulWidget {
-  final WorkModel work;
+class LangsungFormLangsungPage extends StatefulWidget {
+  final WorkOnlineModel work;
   final LangsungModel? langsung;
 
-  const LihatFormLangsungPage({Key? key, required this.work, this.langsung})
+  const LangsungFormLangsungPage({Key? key, required this.work, this.langsung})
       : super(key: key);
 
   @override
-  State<LihatFormLangsungPage> createState() => _LihatFormLangsungPage();
+  State<LangsungFormLangsungPage> createState() => _LangsungFormLangsungPage();
 }
 
-class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
+class _LangsungFormLangsungPage extends State<LangsungFormLangsungPage> {
   DatabaseInstance databaseInstance = DatabaseInstance();
-  late VideoPlayerController _controller;
 
   @override
   void initState() {
+    // TODO: implement initState
     databaseInstance.database();
-
-    _controller = VideoPlayerController.file(
-        File(widget.langsung!.akhir_kesimpulan_video!))
-      ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
-      });
-
     super.initState();
   }
 
@@ -103,10 +98,6 @@ class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
                         title: 'Nomor Telepon',
                         content: widget.langsung!.no_telpon_saksi ?? '-',
                       ),
-                      ImageShow(
-                        title: 'Foto identitas',
-                        content: widget.langsung!.file_nomor_identitas ?? '',
-                      ),
                       // Data APP Lama
                       const SizedBox(
                         height: 12.0,
@@ -146,10 +137,6 @@ class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
                         title: 'Tahun Pembuatan',
                         content:
                             widget.langsung!.data_lama_tahun_pembuatan ?? '-',
-                      ),
-                      CustomTextField(
-                        title: 'Class',
-                        content: widget.langsung!.data_lama_class ?? '-',
                       ),
                       CustomTextField(
                         title: 'Konstanta',
@@ -246,10 +233,6 @@ class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
                         title: 'Tahun Pembuatan',
                         content:
                             widget.langsung!.data_baru_tahun_pembuatan ?? '-',
-                      ),
-                      CustomTextField(
-                        title: 'Class',
-                        content: widget.langsung!.data_baru_class ?? '-',
                       ),
                       CustomTextField(
                         title: 'Konstanta',
@@ -848,11 +831,6 @@ class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
                         title: 'Akurasi pengukuran kWh Meter',
                         content: widget.langsung!.pemeriksaan_akurasi ?? '-',
                       ),
-                      ImageShow(
-                        title: 'Foto Pengukuran',
-                        content:
-                            widget.langsung!.pemeriksaan_foto_sebelum ?? '',
-                      ),
                       //Wiring App
                       Text(
                         'Wiring App',
@@ -932,15 +910,6 @@ class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
                       const SizedBox(
                         height: 12.0,
                       ),
-                      CustomTextField(
-                        title: 'Apakah diteruskan ke lab?',
-                        content: widget.langsung!.akhir_labor ?? '-',
-                      ),
-
-                      CustomTextField(
-                        title: 'Apakah ada temuan?',
-                        content: widget.langsung!.akhir_temuan ?? '-',
-                      ),
 
                       CustomTextKeterangan(
                         title: 'Hasil Pemeriksaan',
@@ -951,66 +920,6 @@ class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
                       CustomTextKeterangan(
                         title: 'Kesimpulan Hasil Pemeriksaan',
                         content: widget.langsung!.akhir_kesimpulan ?? '-',
-                      ),
-
-                      Center(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Upload Video Lokasi',
-                              style: blackTextStyle.copyWith(
-                                fontWeight: medium,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 12.0,
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                              child: widget.langsung!.akhir_kesimpulan_video !=
-                                      null
-                                  ? Column(
-                                      children: [
-                                        AspectRatio(
-                                          aspectRatio:
-                                              _controller.value.aspectRatio,
-                                          child: VideoPlayer(_controller),
-                                        ),
-                                        Center(
-                                          child: IconButton(
-                                            icon: Icon(
-                                              _controller.value.isPlaying
-                                                  ? Icons.pause
-                                                  : Icons.play_arrow,
-                                              size: 30,
-                                            ),
-                                            color: Colors.blue,
-                                            onPressed: () {
-                                              setState(() {
-                                                _controller.value.isPlaying
-                                                    ? _controller.pause()
-                                                    : _controller.play();
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : Container(
-                                      height: 100,
-                                      child: Center(
-                                        child: Image.asset(
-                                          'assets/ic_upload.png',
-                                          width: 32,
-                                        ),
-                                      ),
-                                    ),
-                            ),
-                          ],
-                        ),
                       ),
 
                       CustomTextKeterangan(

@@ -69,7 +69,7 @@ class _PerformaPageState extends State<PerformaPage> {
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             return AspectRatio(
-                              aspectRatio: 0.8,
+                              aspectRatio: 0.5,
                               child: Card(
                                 color: Colors.white,
                                 child: Column(
@@ -128,6 +128,36 @@ class _PerformaPageState extends State<PerformaPage> {
                                               ? Colors.black
                                               : Colors.grey,
                                         ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 18,
+                                    ),
+                                    Expanded(
+                                      child: AspectRatio(
+                                        aspectRatio: 1,
+                                        child: PieChart(
+                                          PieChartData(
+                                            pieTouchData: PieTouchData(),
+                                            startDegreeOffset: 180,
+                                            borderData: FlBorderData(
+                                              show: false,
+                                            ),
+                                            sectionsSpace: 12,
+                                            centerSpaceRadius: 0,
+                                            sections: showingSectionsSB(
+                                              snapshot.data!.sudah!,
+                                              snapshot.data!.belum!,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
                                         Indicator(
                                           color: const Color(0xff845bef),
                                           text: 'TO',
@@ -163,15 +193,16 @@ class _PerformaPageState extends State<PerformaPage> {
                                             ),
                                             sectionsSpace: 12,
                                             centerSpaceRadius: 0,
-                                            sections: showingSections(
-                                              snapshot.data!.sudah!,
-                                              snapshot.data!.belum!,
+                                            sections: showingSectionsDL(
                                               snapshot.data!.dalam!,
                                               snapshot.data!.luar!,
                                             ),
                                           ),
                                         ),
                                       ),
+                                    ),
+                                    const SizedBox(
+                                      height: 24.0,
                                     ),
                                   ],
                                 ),
@@ -201,17 +232,25 @@ class _PerformaPageState extends State<PerformaPage> {
     );
   }
 
-  List<PieChartSectionData> showingSections(
+  List<PieChartSectionData> showingSectionsSB(
     int sudah,
     int belum,
-    int dalam,
-    int luar,
   ) {
     return List.generate(
-      4,
+      2,
       (i) {
         final isTouched = i == touchedIndex;
         final double opacity = isTouched ? 1 : 0.6;
+        double offset1 = 0.5;
+        double offset2 = 0.5;
+
+        if (sudah == 0) {
+          offset2 = 0;
+        }
+
+        if (belum == 0) {
+          offset1 = 0;
+        }
         switch (i) {
           case 0:
             return PieChartSectionData(
@@ -223,7 +262,7 @@ class _PerformaPageState extends State<PerformaPage> {
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: const Color(0xff044d7c)),
-              titlePositionPercentageOffset: 0.55,
+              titlePositionPercentageOffset: offset1,
             );
           case 1:
             return PieChartSectionData(
@@ -235,9 +274,37 @@ class _PerformaPageState extends State<PerformaPage> {
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: const Color(0xff90672d)),
-              titlePositionPercentageOffset: 0.55,
+              titlePositionPercentageOffset: offset2,
             );
-          case 2:
+
+          default:
+            return PieChartSectionData();
+        }
+      },
+    );
+  }
+
+  List<PieChartSectionData> showingSectionsDL(
+    int dalam,
+    int luar,
+  ) {
+    return List.generate(
+      2,
+      (i) {
+        final isTouched = i == touchedIndex;
+        final double opacity = isTouched ? 1 : 0.5;
+        double offset1 = 0.5;
+        double offset2 = 0.5;
+
+        if (luar == 0) {
+          offset2 = 0;
+        }
+
+        if (dalam == 0) {
+          offset1 = 0;
+        }
+        switch (i) {
+          case 0:
             return PieChartSectionData(
               color: const Color(0xff845bef).withOpacity(opacity),
               value: dalam.toDouble(),
@@ -247,9 +314,9 @@ class _PerformaPageState extends State<PerformaPage> {
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: const Color(0xff4c3788)),
-              titlePositionPercentageOffset: 0.6,
+              titlePositionPercentageOffset: offset2,
             );
-          case 3:
+          case 1:
             return PieChartSectionData(
               color: const Color(0xff13d38e).withOpacity(opacity),
               value: luar.toDouble(),
@@ -259,7 +326,7 @@ class _PerformaPageState extends State<PerformaPage> {
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: const Color(0xff0c7f55)),
-              titlePositionPercentageOffset: 0.55,
+              titlePositionPercentageOffset: offset1,
             );
 
           default:

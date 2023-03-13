@@ -6,10 +6,9 @@ import 'package:p2tl/ui/pages/form_langsung/data_baru.dart';
 import 'package:p2tl/ui/widgets/buttons.dart';
 import 'package:p2tl/ui/widgets/forms.dart';
 import 'package:p2tl/ui/widgets/header.dart';
-import 'package:p2tl/ui/widgets/text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'dart:convert';
+import 'package:path_provider/path_provider.dart';
 
 class DataLamaFormLangsungPage extends StatefulWidget {
   final WorkModel work;
@@ -43,10 +42,23 @@ class _DataLamaFormLangsungPage extends State<DataLamaFormLangsungPage> {
 
   XFile? selectedImage;
 
+  String? imagePath;
+
   selectImage() async {
     final imagePicker = ImagePicker();
     final XFile? image = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image!.saveTo(file.path);
+
+    imagePath = '$path/$filename.jpg';
 
     if (image != null) {
       setState(() {
@@ -56,11 +68,23 @@ class _DataLamaFormLangsungPage extends State<DataLamaFormLangsungPage> {
   }
 
   XFile? selectedImage2;
+  String? imagePath2;
 
   selectImage2() async {
     final imagePicker = ImagePicker();
     final XFile? image2 = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image2!.saveTo(file.path);
+
+    imagePath2 = '$path/$filename.jpg';
 
     if (image2 != null) {
       setState(() {
@@ -327,18 +351,9 @@ class _DataLamaFormLangsungPage extends State<DataLamaFormLangsungPage> {
                                   alatPembatasController.text,
                               'data_lama_rating_arus_2':
                                   ratingArus2Controller.text,
-                              'data_lama_foto_kwh_meter':
-                                  'data:image/png;base64,' +
-                                      base64Encode(File(selectedImage!.path)
-                                          .readAsBytesSync()),
-                              'data_lama_foto_pembatas':
-                                  'data:image/png;base64,' +
-                                      base64Encode(File(selectedImage2!.path)
-                                          .readAsBytesSync()),
+                              'data_lama_foto_kwh_meter': imagePath,
+                              'data_lama_foto_pembatas': imagePath2,
                             });
-
-                            print('TTTTTTTTTTTTTTTTTTTTTTTTTT');
-                            print(item);
 
                             if (item != 0) {
                               Navigator.push(context,

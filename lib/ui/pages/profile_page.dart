@@ -18,6 +18,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   DatabaseInstance databaseInstance = DatabaseInstance();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -104,15 +105,42 @@ class _ProfilePageState extends State<ProfilePage> {
                         Navigator.pushNamed(context, '/history');
                       },
                     ),
-                    ProfileMenuItem(
-                      iconUrl: 'assets/ic_send.png',
-                      title: 'Sync',
-                      onTap: () async {
-                        var item = await databaseInstance.getWork();
+                    isLoading == false
+                        ? ProfileMenuItem(
+                            iconUrl: 'assets/ic_send.png',
+                            title: 'Sync',
+                            onTap: () async {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              print("rer");
+                              var item = await databaseInstance.getWork();
 
-                        // Navigator.pushNamed(context, '/home');
-                      },
-                    ),
+                              setState(() {
+                                isLoading = false;
+                              });
+                              Navigator.pushNamed(context, '/home');
+                            },
+                          )
+                        : Container(
+                            margin: const EdgeInsets.only(
+                              bottom: 30,
+                            ),
+                            child: Row(
+                              children: [
+                                CircularProgressIndicator(),
+                                const SizedBox(
+                                  width: 18,
+                                ),
+                                Text(
+                                  'Loading ....',
+                                  style: blackTextStyle.copyWith(
+                                    fontWeight: medium,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                     ProfileMenuItem(
                       iconUrl: 'assets/ic_logout.png',
                       title: 'Log Out',

@@ -103,8 +103,8 @@ class _TargetPageState extends State<TargetPage> {
                                           color: snapshot.data![index]
                                                       .keteranganP2tl !=
                                                   'Belum Dikerjakan'
-                                              ? greenColor
-                                              : whiteColor,
+                                              ? greyColor
+                                              : greenColor,
                                         ),
                                       ),
                                       child: Row(

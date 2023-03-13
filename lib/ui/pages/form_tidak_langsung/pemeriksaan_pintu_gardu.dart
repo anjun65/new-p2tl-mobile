@@ -6,10 +6,10 @@ import 'package:p2tl/ui/pages/form_tidak_langsung/wiring_app.dart';
 import 'package:p2tl/ui/widgets/buttons.dart';
 import 'package:p2tl/ui/widgets/forms.dart';
 import 'package:p2tl/ui/widgets/header.dart';
-import 'package:p2tl/ui/widgets/text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'dart:convert';
+
+import 'package:path_provider/path_provider.dart';
 
 class PemeriksaanPintuGarduFormTidakLangsungPage extends StatefulWidget {
   final WorkModel work;
@@ -37,10 +37,23 @@ class _PemeriksaanPintuGarduFormTidakLangsungPage
 
   XFile? selectedImage;
 
+  String? imagePath;
+
   selectImage() async {
     final imagePicker = ImagePicker();
     final XFile? image = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image!.saveTo(file.path);
+
+    imagePath = '$path/$filename.jpg';
 
     if (image != null) {
       setState(() {
@@ -50,11 +63,23 @@ class _PemeriksaanPintuGarduFormTidakLangsungPage
   }
 
   XFile? selectedImage2;
+  String? imagePath2;
 
   selectImage2() async {
     final imagePicker = ImagePicker();
     final XFile? image2 = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image2!.saveTo(file.path);
+
+    imagePath2 = '$path/$filename.jpg';
 
     if (image2 != null) {
       setState(() {
@@ -444,16 +469,12 @@ class _PemeriksaanPintuGarduFormTidakLangsungPage
                               'pintu_nomor_tahun_kode_segel':
                                   nomorTahunKodeController.text,
                               'pintu_keterangan': keteranganController.text,
-                              'pintu_foto_sebelum': 'data:image/png;base64,' +
-                                  base64Encode(File(selectedImage!.path)
-                                      .readAsBytesSync()),
+                              'pintu_foto_sebelum': imagePath,
                               'pintu_post_peralatan': selectedpost_peralatan,
                               'pintu_post_segel': selectedpost_segel,
                               'pintu_post_nomor_tahun_kode_segel':
                                   postTahunKodeController.text,
-                              'pintu_foto_sesudah': 'data:image/png;base64,' +
-                                  base64Encode(File(selectedImage2!.path)
-                                      .readAsBytesSync()),
+                              'pintu_foto_sesudah': imagePath2,
                               'pintu_keterangan_all':
                                   keteranganallController.text,
                             });

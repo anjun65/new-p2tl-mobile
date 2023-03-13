@@ -6,10 +6,11 @@ import 'package:p2tl/ui/pages/form_tidak_langsung/pemeriksaan_pelindung_kwh.dart
 import 'package:p2tl/ui/widgets/buttons.dart';
 import 'package:p2tl/ui/widgets/forms.dart';
 import 'package:p2tl/ui/widgets/header.dart';
-import 'package:p2tl/ui/widgets/text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
+
+import 'package:path_provider/path_provider.dart';
 
 class DataAppLanjutanFormTidakLangsungPage extends StatefulWidget {
   final WorkModel work;
@@ -54,10 +55,26 @@ class _DataAppLanjutanFormTidakLangsungPage
   XFile? selectedImage3;
   XFile? selectedImage4;
 
+  String? imagePath;
+  String? imagePath2;
+  String? imagePath3;
+  String? imagePath4;
+
   selectImage() async {
     final imagePicker = ImagePicker();
     final XFile? image = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image!.saveTo(file.path);
+
+    imagePath = '$path/$filename.jpg';
 
     if (image != null) {
       setState(() {
@@ -68,36 +85,69 @@ class _DataAppLanjutanFormTidakLangsungPage
 
   selectImage2() async {
     final imagePicker = ImagePicker();
-    final XFile? image = await imagePicker.pickImage(
+    final XFile? image2 = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
 
-    if (image != null) {
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image2!.saveTo(file.path);
+
+    imagePath2 = '$path/$filename.jpg';
+
+    if (image2 != null) {
       setState(() {
-        selectedImage2 = image;
+        selectedImage2 = image2;
       });
     }
   }
 
   selectImage3() async {
     final imagePicker = ImagePicker();
-    final XFile? image = await imagePicker.pickImage(
+    final XFile? image3 = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
 
-    if (image != null) {
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image3!.saveTo(file.path);
+
+    imagePath3 = '$path/$filename.jpg';
+
+    if (image3 != null) {
       setState(() {
-        selectedImage3 = image;
+        selectedImage3 = image3;
       });
     }
   }
 
   selectImage4() async {
     final imagePicker = ImagePicker();
-    final XFile? image = await imagePicker.pickImage(
+    final XFile? image4 = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
 
-    if (image != null) {
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image4!.saveTo(file.path);
+
+    imagePath4 = '$path/$filename.jpg';
+
+    if (image4 != null) {
       setState(() {
-        selectedImage4 = image;
+        selectedImage4 = image4;
       });
     }
   }
@@ -484,32 +534,24 @@ class _DataAppLanjutanFormTidakLangsungPage
                               'ct_cls': ctClsController.text,
                               'ct_rasio': ctRasioController.text,
                               'ct_burden': ctBurdenController.text,
-                              'ct_foto': 'data:image/png;base64,' +
-                                  base64Encode(File(selectedImage!.path)
-                                      .readAsBytesSync()),
+                              'ct_foto': imagePath,
                               'pt_merk': ptMerkController.text,
                               'pt_cls': ptClsController.text,
                               'pt_rasio': ptRasioController.text,
                               'pt_burden': ptBurdenController.text,
-                              'pt_foto': 'data:image/png;base64,' +
-                                  base64Encode(File(selectedImage2!.path)
-                                      .readAsBytesSync()),
+                              'pt_foto': imagePath2,
                               'kubikel_merk': kubikelMerkController.text,
                               'kubikel_type': kubikelTypeController.text,
                               'kubikel_no_seri': kubikelNoSeriController.text,
                               'kubikel_tahun':
                                   kubikelTahunPembuatanController.text,
-                              'kubikel_foto': 'data:image/png;base64,' +
-                                  base64Encode(File(selectedImage3!.path)
-                                      .readAsBytesSync()),
+                              'kubikel_foto': imagePath3,
                               'box_app_merk': boxAppMerkController.text,
                               'box_app_type': boxAppTypeController.text,
                               'box_app_no_seri': boxAppNoSeriController.text,
                               'box_app_tahun':
                                   boxAppTahunPembuatanController.text,
-                              'box_app_foto': 'data:image/png;base64,' +
-                                  base64Encode(File(selectedImage4!.path)
-                                      .readAsBytesSync()),
+                              'box_app_foto': imagePath4,
                             });
 
                             if (item != 0) {

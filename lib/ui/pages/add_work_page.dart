@@ -16,6 +16,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:io';
 import 'package:geolocator/geolocator.dart';
+import 'dart:math';
 
 class AddWorkPage extends StatefulWidget {
   const AddWorkPage({Key? key}) : super(key: key);
@@ -116,10 +117,23 @@ class _AddWorkPageState extends State<AddWorkPage> {
 
   XFile? selectedImage;
 
+  String? imagePath;
+
   selectImage() async {
     final imagePicker = ImagePicker();
     final XFile? image = await imagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('$path/$filename.jpg');
+
+    // Copy the video file to the new file
+    await image!.saveTo(file.path);
+
+    imagePath = '$path/$filename.jpg';
 
     if (image != null) {
       setState(() {
@@ -570,6 +584,7 @@ class _AddWorkPageState extends State<AddWorkPage> {
                   onPressed: () async {
                     if (validate()) {
                       await databaseInstance.insert({
+                        'works_id': Random().nextInt(99999) + 10000,
                         'id_pelanggan': idPelangganController.text,
                         'nama_pelanggan': namaPelangganController.text,
                         'latitude': latitudeController.text,
@@ -592,10 +607,9 @@ class _AddWorkPageState extends State<AddWorkPage> {
                         'P8': p8Controller.text,
                         'P9': p9Controller.text,
                         'P10': p10Controller.text,
-                        'image': 'data:image/png;base64,' +
-                            base64Encode(
-                                File(selectedImage!.path).readAsBytesSync()),
+                        'image': imagePath,
                         'video': video_path,
+                        'isLuar': 1,
                         'createdAt':
                             DateTime.now().toIso8601String().split('T').first,
                       });
