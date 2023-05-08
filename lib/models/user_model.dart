@@ -23,7 +23,7 @@ class UserModel {
     id = json['data']['user']['id'];
     name = json['data']['user']['name'];
     email = json['data']['user']['email'];
-    regus_id = json['data']['user']['regus_id'];
+    regus_id = json['data']['user']['regus_id'].toString();
     roles = json['data']['user']['roles'];
     token = json['data']['access_token'];
   }

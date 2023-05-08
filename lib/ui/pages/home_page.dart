@@ -2,6 +2,7 @@ import 'package:p2tl/blocs/auth/auth_bloc.dart';
 import 'package:p2tl/blocs/work/bloc/work_bloc.dart';
 import 'package:p2tl/models/database_instance.dart';
 import 'package:p2tl/models/work_model.dart';
+import 'package:p2tl/services/auth_service.dart';
 import 'package:p2tl/shared/helpers.dart';
 import 'package:p2tl/shared/theme.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   DatabaseInstance? databaseInstance;
 
+  String? roles;
+
   Future _refresh() async {
     setState(() {});
   }
@@ -34,6 +37,14 @@ class _HomePageState extends State<HomePage> {
   Future delete(int id) async {
     await databaseInstance!.delete(id);
     setState(() {});
+  }
+
+  Future<void> getRoles() async {
+    var new_roles = await AuthService().getRoles();
+
+    setState(() {
+      roles = new_roles;
+    });
   }
 
   @override
@@ -105,9 +116,30 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/add-work-order').then((value) {
-            setState(() {});
-          });
+          if (roles == 'PETUGAS LAPANGAN') {
+            Navigator.pushNamed(context, '/add-work-order').then((value) {
+              setState(() {});
+            });
+          } else {
+            showDialog(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Text("Menu Tidak bisa diakses"),
+                content: const Text("Hanya bisa diakses oleh Petugas Lapangan"),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(14),
+                      child: const Text("Oke"),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
         },
         backgroundColor: purpleColor,
         child: Image.asset(

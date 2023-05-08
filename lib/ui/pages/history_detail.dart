@@ -44,7 +44,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(
-        'https://new.momen-kita.com/storage/${widget.work!.video}')
+        'https://p2tl.bright.id/storage/${widget.work!.video}')
       ..initialize().then(
         (_) {
           // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
@@ -156,7 +156,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                       ImageNetwork(
                         title: 'Foto',
                         content:
-                            'https://new.momen-kita.com/storage/${widget.work!.image}' ??
+                            'https://p2tl.bright.id/storage/${widget.work!.image}' ??
                                 '',
                       ),
                       const SizedBox(

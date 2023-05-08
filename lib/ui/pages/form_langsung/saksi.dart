@@ -196,6 +196,8 @@ class _SaksiFormLangsungPage extends State<SaksiFormLangsungPage> {
                                 .first,
                           });
 
+                          print(item);
+
                           Navigator.push(context,
                               MaterialPageRoute(builder: (builder) {
                             return DataLamaFormLangsungPage(

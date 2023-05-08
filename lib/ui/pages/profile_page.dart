@@ -1,5 +1,6 @@
 import 'package:p2tl/blocs/auth/auth_bloc.dart';
 import 'package:p2tl/blocs/work/bloc/work_bloc.dart';
+import 'package:p2tl/services/auth_service.dart';
 import 'package:p2tl/shared/helpers.dart';
 import 'package:p2tl/shared/theme.dart';
 import 'package:p2tl/ui/widgets/buttons.dart';
@@ -24,8 +25,18 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     // TODO: implement initState
     databaseInstance.database();
-
+    getRoles();
     super.initState();
+  }
+
+  String? name;
+
+  Future<void> getRoles() async {
+    var new_name = await AuthService().getRoles();
+
+    setState(() {
+      name = new_name;
+    });
   }
 
   @override
@@ -89,7 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       height: 16,
                     ),
                     Text(
-                      'Petugas',
+                      name ?? "",
                       style: blackTextStyle.copyWith(
                         fontSize: 18,
                         fontWeight: medium,

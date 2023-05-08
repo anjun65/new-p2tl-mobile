@@ -611,7 +611,6 @@ class DatabaseInstance {
     if (query.isNotEmpty) {
       return LangsungModel.fromJson(query[0]);
     }
-
     return LangsungModel();
   }
 
@@ -711,7 +710,7 @@ class DatabaseInstance {
     var delete_work = await _database!.rawDelete("Delete from $table");
   }
 
-  final String baseUrl = 'https://new.momen-kita.com/api';
+  final String baseUrl = 'https://p2tl.bright.id/api';
 
   Future<int> getWork() async {
     final token = await AuthService().getToken();

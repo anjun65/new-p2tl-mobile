@@ -6,7 +6,7 @@ import 'package:p2tl/services/auth_service.dart';
 import 'package:http/http.dart' as http;
 
 class LangsungService {
-  final String baseUrl = 'https://new.momen-kita.com/api';
+  final String baseUrl = 'https://p2tl.bright.id/api';
 
   Future<LangsungModel> getLangsung(int id) async {
     try {

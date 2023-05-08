@@ -221,6 +221,7 @@ class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
                       const SizedBox(
                         height: 12.0,
                       ),
+
                       Text(
                         'kWh Meter',
                         style: blackTextStyle.copyWith(
@@ -257,7 +258,7 @@ class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
                       ),
                       CustomTextField(
                         title: 'Rating Arus',
-                        content: widget.langsung!.data_lama_rating_arus ?? '-',
+                        content: widget.langsung!.data_baru_rating_arus ?? '-',
                       ),
                       CustomTextField(
                         title: 'Tegangan Nomimal',
