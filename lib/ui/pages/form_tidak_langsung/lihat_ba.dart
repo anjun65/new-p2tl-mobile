@@ -5,6 +5,18 @@ import 'package:p2tl/models/tidak_langsung_model.dart';
 import 'package:p2tl/models/work_model.dart';
 import 'package:p2tl/shared/theme.dart';
 import 'package:p2tl/ui/pages/form_langsung/data_lama.dart';
+import 'package:p2tl/ui/pages/form_tidak_langsung/data_app.dart';
+import 'package:p2tl/ui/pages/form_tidak_langsung/data_app_lanjutan.dart';
+import 'package:p2tl/ui/pages/form_tidak_langsung/hasil_pemeriksaan.dart';
+import 'package:p2tl/ui/pages/form_tidak_langsung/pemeriksaan_amr.dart';
+import 'package:p2tl/ui/pages/form_tidak_langsung/pemeriksaan_pelindung_ct.dart';
+import 'package:p2tl/ui/pages/form_tidak_langsung/pemeriksaan_pelindung_kwh.dart';
+import 'package:p2tl/ui/pages/form_tidak_langsung/pemeriksaan_pelindung_terminal.dart';
+import 'package:p2tl/ui/pages/form_tidak_langsung/pemeriksaan_pengukuran.dart';
+import 'package:p2tl/ui/pages/form_tidak_langsung/pemeriksaan_pintu_gardu.dart';
+import 'package:p2tl/ui/pages/form_tidak_langsung/pemeriksaan_terminal_ct.dart';
+import 'package:p2tl/ui/pages/form_tidak_langsung/pemeriksaan_terminal_vt.dart';
+import 'package:p2tl/ui/pages/form_tidak_langsung/wiring_app.dart';
 import 'package:p2tl/ui/widgets/buttons.dart';
 import 'package:p2tl/ui/widgets/forms.dart';
 import 'package:p2tl/ui/widgets/header.dart';
@@ -131,12 +143,41 @@ class _LihatFormTidakLangsungPageState
                         title: 'Tempat Kedudukan',
                         content: widget.langsung!.data_tempat_kedudukan ?? '-',
                       ),
-                      Text(
-                        'Data APP',
-                        style: blackTextStyle.copyWith(
-                          fontSize: 16,
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Data APP',
+                            style: blackTextStyle.copyWith(
+                              fontSize: 16,
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return DataAppFormTidakLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -227,11 +268,40 @@ class _LihatFormTidakLangsungPageState
                         title: 'Foto Kwh Meter',
                         content: widget.langsung!.kwh_foto ?? '',
                       ),
-                      Text(
-                        'Trafo Arus (CT)',
-                        style: blackTextStyle.copyWith(
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Trafo Arus (CT)',
+                            style: blackTextStyle.copyWith(
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return DataAppLanjutanFormTidakLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -353,11 +423,40 @@ class _LihatFormTidakLangsungPageState
                       const SizedBox(
                         height: 12.0,
                       ),
-                      Text(
-                        'PINTU BOX APP/PELINDUNG KWH METER',
-                        style: blackTextStyle.copyWith(
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'PINTU BOX APP/PELINDUNG\nKWH METER',
+                            style: blackTextStyle.copyWith(
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return PemeriksaanPelindungKwhFormTidakLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -427,11 +526,40 @@ class _LihatFormTidakLangsungPageState
                         content:
                             widget.langsung!.pelindung_kwh_foto_sesudah ?? '',
                       ),
-                      Text(
-                        'PINTU BOX APP TR/PELINDUNG CT DAN PEMBATAS',
-                        style: blackTextStyle.copyWith(
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'PINTU BOX APP TR/PELINDUNG\nCT DAN PEMBATAS',
+                            style: blackTextStyle.copyWith(
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return PemeriksaanPelindungKwhFormTidakLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -501,11 +629,40 @@ class _LihatFormTidakLangsungPageState
                       ),
 
                       // KWH MEter dan Segel
-                      Text(
-                        'PINTU BOX APP TR/PELINDUNG CT DAN PEMBATAS',
-                        style: blackTextStyle.copyWith(
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'PINTU BOX APP TR/PELINDUNG\nCT DAN PEMBATAS',
+                            style: blackTextStyle.copyWith(
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return PemeriksaanPelindungCtFormTidakLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -570,11 +727,40 @@ class _LihatFormTidakLangsungPageState
                       ),
 
                       // Tutup Terminal kWh Meter
-                      Text(
-                        'Tutup Terminal kWh Meter',
-                        style: blackTextStyle.copyWith(
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Tutup Terminal kWh Meter',
+                            style: blackTextStyle.copyWith(
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return PemeriksaanTerminalFormTidakLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -646,11 +832,40 @@ class _LihatFormTidakLangsungPageState
                       ),
 
                       // Pintu Box Modem AMR
-                      Text(
-                        'Pintu Box Modem AMR',
-                        style: blackTextStyle.copyWith(
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Pintu Box Modem AMR',
+                            style: blackTextStyle.copyWith(
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return PemeriksaanAmrFormTidakLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -714,11 +929,40 @@ class _LihatFormTidakLangsungPageState
                       ),
 
                       // Pintu Kubikel/Pelindung Terminal VT
-                      Text(
-                        'Pintu Kubikel/Pelindung Terminal VT',
-                        style: blackTextStyle.copyWith(
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Pintu Kubikel/Pelindung\nTerminal VT',
+                            style: blackTextStyle.copyWith(
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return PemeriksaanTerminalVtFormTidakLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -786,11 +1030,40 @@ class _LihatFormTidakLangsungPageState
                       ),
 
                       // Pintu Kubikel/Pelindung Terminal CT
-                      Text(
-                        'Pintu Kubikel/Pelindung Terminal CT dan Relay',
-                        style: blackTextStyle.copyWith(
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Pintu Kubikel/Pelindung\nTerminal CT dan Relay',
+                            style: blackTextStyle.copyWith(
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return PemeriksaanTerminalCtFormTidakLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -858,11 +1131,40 @@ class _LihatFormTidakLangsungPageState
                       ),
 
                       // Pintu Gardu
-                      Text(
-                        'Pintu Gardu',
-                        style: blackTextStyle.copyWith(
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Pintu Gardu',
+                            style: blackTextStyle.copyWith(
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return PemeriksaanPintuGarduFormTidakLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -940,11 +1242,40 @@ class _LihatFormTidakLangsungPageState
                       const SizedBox(
                         height: 12.0,
                       ),
-                      Text(
-                        'Wiring',
-                        style: blackTextStyle.copyWith(
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Wiring',
+                            style: blackTextStyle.copyWith(
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return WiringAppFormTidakLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -1017,12 +1348,41 @@ class _LihatFormTidakLangsungPageState
                         content: widget.langsung!.wiring_diagram ?? '',
                       ),
 
-                      Text(
-                        'Pengukuran',
-                        style: blackTextStyle.copyWith(
-                          fontSize: 16,
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Pengukuran',
+                            style: blackTextStyle.copyWith(
+                              fontSize: 16,
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return PemeriksaanPengukuranFormTidakLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -1203,12 +1563,41 @@ class _LihatFormTidakLangsungPageState
                       ),
 
                       //Hasil Pemeriksaan
-                      Text(
-                        'Hasil Pemeriksaan',
-                        style: blackTextStyle.copyWith(
-                          fontSize: 16,
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Hasil Pemeriksaan',
+                            style: blackTextStyle.copyWith(
+                              fontSize: 16,
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return HasilPemeriksaanFormTidakLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,

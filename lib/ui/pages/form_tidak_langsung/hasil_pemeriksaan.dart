@@ -164,6 +164,69 @@ class _HasilPemeriksaanFormTidakLangsungPage
                         controller: kesimpulanController,
                         maxLinesText: 4,
                       ),
+                      Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Upload Video Kesimpulan',
+                              style: blackTextStyle.copyWith(
+                                fontWeight: medium,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 12.0,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                selectVideo();
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
+                                child: selectedVideo != null
+                                    ? Column(
+                                        children: [
+                                          AspectRatio(
+                                            aspectRatio:
+                                                _controller.value.aspectRatio,
+                                            child: VideoPlayer(_controller),
+                                          ),
+                                          Center(
+                                            child: IconButton(
+                                              icon: Icon(
+                                                _controller.value.isPlaying
+                                                    ? Icons.pause
+                                                    : Icons.play_arrow,
+                                                size: 30,
+                                              ),
+                                              color: Colors.blue,
+                                              onPressed: () {
+                                                setState(() {
+                                                  _controller.value.isPlaying
+                                                      ? _controller.pause()
+                                                      : _controller.play();
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : Container(
+                                        height: 100,
+                                        child: Center(
+                                          child: Image.asset(
+                                            'assets/ic_upload.png',
+                                            width: 32,
+                                          ),
+                                        ),
+                                      ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       CustomFormField(
                         title: 'Tindakan yang Dilakukan',
                         controller: tindakanController,
@@ -341,6 +404,8 @@ class _HasilPemeriksaanFormTidakLangsungPage
                               'akhir_kesimpulan_video': video_path,
                               'akhir_temuan': isTemuan,
                             });
+
+                            print(item);
 
                             if (item != 0) {
                               Navigator.pushNamedAndRemoveUntil(

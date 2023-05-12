@@ -5,6 +5,18 @@ import 'package:p2tl/models/database_instance.dart';
 import 'package:p2tl/models/langsung_model.dart';
 import 'package:p2tl/models/work_model.dart';
 import 'package:p2tl/shared/theme.dart';
+import 'package:p2tl/ui/pages/form_langsung/data_baru.dart';
+import 'package:p2tl/ui/pages/form_langsung/data_lama.dart';
+import 'package:p2tl/ui/pages/form_langsung/hasil_pemeriksaan.dart';
+import 'package:p2tl/ui/pages/form_langsung/pemeriksaan_kwh_meter.dart';
+import 'package:p2tl/ui/pages/form_langsung/pemeriksaan_papan_ok.dart';
+import 'package:p2tl/ui/pages/form_langsung/pemeriksaan_pelindung_busbar.dart';
+import 'package:p2tl/ui/pages/form_langsung/pemeriksaan_pelindung_kwh.dart';
+import 'package:p2tl/ui/pages/form_langsung/pemeriksaan_pengukuran.dart';
+import 'package:p2tl/ui/pages/form_langsung/pemeriksaan_penutup_mcb.dart';
+import 'package:p2tl/ui/pages/form_langsung/pemeriksaan_terminal.dart';
+import 'package:p2tl/ui/pages/form_langsung/wiring_app.dart';
+import 'package:p2tl/ui/widgets/buttons.dart';
 import 'package:p2tl/ui/widgets/header.dart';
 import 'package:p2tl/ui/widgets/image_show.dart';
 import 'package:p2tl/ui/widgets/keterangan.dart';
@@ -111,12 +123,41 @@ class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
                       const SizedBox(
                         height: 12.0,
                       ),
-                      Text(
-                        'Data APP Terpasang/Lama',
-                        style: blackTextStyle.copyWith(
-                          fontSize: 16,
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Data APP Terpasang/Lama',
+                            style: blackTextStyle.copyWith(
+                              fontSize: 16,
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return DataLamaFormLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -211,12 +252,41 @@ class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
                       const SizedBox(
                         height: 12.0,
                       ),
-                      Text(
-                        'Data APP Baru',
-                        style: blackTextStyle.copyWith(
-                          fontSize: 16,
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Data APP Baru',
+                            style: blackTextStyle.copyWith(
+                              fontSize: 16,
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return DataBaruFormLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -322,11 +392,40 @@ class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
                       const SizedBox(
                         height: 12.0,
                       ),
-                      Text(
-                        'KWH Meter & Segel Metrologi kWh Meter',
-                        style: blackTextStyle.copyWith(
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'KWH Meter & Segel\n Metrologi kWh Meter',
+                            style: blackTextStyle.copyWith(
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return PemeriksaanKwhMeterFormLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -387,11 +486,40 @@ class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
                           title: 'Foto Ketika Pemeriksaan',
                           content: widget.langsung!.kwh_foto_sesudah ?? ''),
                       // Terminal Kwh Meter
-                      Text(
-                        'Terminal kWh Meter',
-                        style: blackTextStyle.copyWith(
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Terminal kWh Meter',
+                            style: blackTextStyle.copyWith(
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return PemeriksaanTerminalFormLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -456,11 +584,40 @@ class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
                           content:
                               widget.langsung!.terminal_foto_sesudah ?? ''),
                       // Pintu Box App
-                      Text(
-                        'Pintu Box APP/Pelindung kWh Meter',
-                        style: blackTextStyle.copyWith(
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Pintu Box APP/\nPelindung kWh Meter',
+                            style: blackTextStyle.copyWith(
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return PemeriksaanPelindungKwhFormLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -531,11 +688,40 @@ class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
                               widget.langsung!.pelindung_kwh_foto_sesudah ??
                                   ''),
                       // Pintu Box App/ Pelindung Busbar
-                      Text(
-                        'Pintu Box APP/Pelindung Busbar dan Pembatas',
-                        style: blackTextStyle.copyWith(
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Pintu Box APP/Pelindung \nBusbar & Pembatas',
+                            style: blackTextStyle.copyWith(
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return PemeriksaanPelindungBusbarFormLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -597,11 +783,40 @@ class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
                           content: widget.langsung!.busbar_foto_sesudah ?? ''),
 
                       // Papan OK
-                      Text(
-                        'Papan OK',
-                        style: blackTextStyle.copyWith(
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Papan OK',
+                            style: blackTextStyle.copyWith(
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return PemeriksaanPapanOkFormLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -666,11 +881,40 @@ class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
                               widget.langsung!.papan_ok_foto_sesudah ?? ''),
 
                       // Box Penutup MCB
-                      Text(
-                        'Box Penutup MCB',
-                        style: blackTextStyle.copyWith(
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Box Penutup MCB',
+                            style: blackTextStyle.copyWith(
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return PemeriksaanPenutupMcbFormLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -736,12 +980,41 @@ class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
                       ),
 
                       // Pemeriksaan dan Pengukuran
-                      Text(
-                        'Pemeriksaan dan Pengukuran',
-                        style: blackTextStyle.copyWith(
-                          fontSize: 16,
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Pemeriksaan & Pengukuran',
+                            style: blackTextStyle.copyWith(
+                              fontSize: 16,
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return PemeriksaanPengukuranFormLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -855,12 +1128,41 @@ class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
                             widget.langsung!.pemeriksaan_foto_sebelum ?? '',
                       ),
                       //Wiring App
-                      Text(
-                        'Wiring App',
-                        style: blackTextStyle.copyWith(
-                          fontSize: 16,
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Wiring App',
+                            style: blackTextStyle.copyWith(
+                              fontSize: 16,
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return WiringAppFormLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,
@@ -923,12 +1225,41 @@ class _LihatFormLangsungPage extends State<LihatFormLangsungPage> {
                                 '-',
                       ),
                       //Hasil Pemeriksaan
-                      Text(
-                        'Hasil Pemeriksaan',
-                        style: blackTextStyle.copyWith(
-                          fontSize: 16,
-                          fontWeight: semiBold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Hasil Pemeriksaan',
+                            style: blackTextStyle.copyWith(
+                              fontSize: 16,
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return HasilPemeriksaanFormLangsungPage(
+                                  work: widget.work,
+                                  id: widget.langsung!.id!,
+                                );
+                              }));
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: purpleColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(56),
+                              ),
+                            ),
+                            child: Text(
+                              "Ubah",
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 12.0,

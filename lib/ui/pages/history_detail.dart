@@ -195,61 +195,61 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                           },
                         ),
                       ),
-                      Column(
-                        children: [
-                          widget.work.jenis_p2tl != '3TL'
-                              ? Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    HomeServiceItem(
-                                      iconUrl: 'assets/ic_view.png',
-                                      title: 'Lihat BA Langsung',
-                                      onTap: () async {
-                                        LangsungModel item =
-                                            await LangsungService()
-                                                .getLangsung(widget.work.id!);
+                      // Column(
+                      //   children: [
+                      //     widget.work.jenis_p2tl != '3TL'
+                      //         ? Row(
+                      //             mainAxisAlignment:
+                      //                 MainAxisAlignment.spaceEvenly,
+                      //             children: [
+                      //               HomeServiceItem(
+                      //                 iconUrl: 'assets/ic_view.png',
+                      //                 title: 'Lihat BA Langsung',
+                      //                 onTap: () async {
+                      //                   LangsungModel item =
+                      //                       await LangsungService()
+                      //                           .getLangsung(widget.work.id!);
 
-                                        if (item != null) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (builder) {
-                                                return LangsungFormLangsungPage(
-                                                  work: widget.work,
-                                                  langsung: item,
-                                                );
-                                              },
-                                            ),
-                                          );
-                                        } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: const Text(
-                                                'Data tidak dapat ditemukan, Silahkan hubungi admin',
-                                              ),
-                                              backgroundColor: redColor,
-                                            ),
-                                          );
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                )
-                              : Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    HomeServiceItem(
-                                      iconUrl: 'assets/ic_view.png',
-                                      title: 'Lihat BA Tidak Langsung',
-                                      onTap: () async {},
-                                    ),
-                                  ],
-                                )
-                        ],
-                      )
+                      //                   if (item != null) {
+                      //                     Navigator.push(
+                      //                       context,
+                      //                       MaterialPageRoute(
+                      //                         builder: (builder) {
+                      //                           return LangsungFormLangsungPage(
+                      //                             work: widget.work,
+                      //                             langsung: item,
+                      //                           );
+                      //                         },
+                      //                       ),
+                      //                     );
+                      //                   } else {
+                      //                     ScaffoldMessenger.of(context)
+                      //                         .showSnackBar(
+                      //                       SnackBar(
+                      //                         content: const Text(
+                      //                           'Data tidak dapat ditemukan, Silahkan hubungi admin',
+                      //                         ),
+                      //                         backgroundColor: redColor,
+                      //                       ),
+                      //                     );
+                      //                   }
+                      //                 },
+                      //               ),
+                      //             ],
+                      //           )
+                      //         : Row(
+                      //             mainAxisAlignment:
+                      //                 MainAxisAlignment.spaceEvenly,
+                      //             children: [
+                      //               HomeServiceItem(
+                      //                 iconUrl: 'assets/ic_view.png',
+                      //                 title: 'Lihat BA Tidak Langsung',
+                      //                 onTap: () async {},
+                      //               ),
+                      //             ],
+                      //           )
+                      //   ],
+                      // )
                     ],
                   ),
                 ),

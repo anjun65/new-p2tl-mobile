@@ -302,208 +302,224 @@ class _DetailWorkPageState extends State<DetailWorkPage> {
 
                       // labor = json['labor'];
 
-                      Text(
-                        'Keterangan',
-                        style: blackTextStyle.copyWith(
-                          fontWeight: medium,
-                        ),
-                      ),
+                      roles == 'PETUGAS LAPANGAN'
+                          ? Text(
+                              'Keterangan',
+                              style: blackTextStyle.copyWith(
+                                fontWeight: medium,
+                              ),
+                            )
+                          : Container(),
                       const SizedBox(
                         height: 8,
                       ),
-                      Container(
-                        width: double.infinity,
-                        margin: EdgeInsets.only(bottom: 24),
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: Colors.grey),
-                        ),
-                        child: DropdownButton(
-                          value: selectedStatus!,
-                          isExpanded: true,
-                          underline: SizedBox(),
-                          items: status!
-                              .map((e) => DropdownMenuItem(
-                                  value: e,
-                                  child: Text(
-                                    e,
-                                    style: blackTextStyle.copyWith(
-                                      fontWeight: medium,
-                                    ),
-                                  )))
-                              .toList(),
-                          onChanged: (item) {
-                            setState(() {
-                              selectedStatus = item;
-                            });
-                          },
-                        ),
-                      ),
+                      roles == 'PETUGAS LAPANGAN'
+                          ? Container(
+                              width: double.infinity,
+                              margin: EdgeInsets.only(bottom: 24),
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(color: Colors.grey),
+                              ),
+                              child: DropdownButton(
+                                value: selectedStatus!,
+                                isExpanded: true,
+                                underline: SizedBox(),
+                                items: status!
+                                    .map((e) => DropdownMenuItem(
+                                        value: e,
+                                        child: Text(
+                                          e,
+                                          style: blackTextStyle.copyWith(
+                                            fontWeight: medium,
+                                          ),
+                                        )))
+                                    .toList(),
+                                onChanged: (item) {
+                                  setState(() {
+                                    selectedStatus = item;
+                                  });
+                                },
+                              ),
+                            )
+                          : Container(),
 
-                      selectedStatus != 'Belum Dikerjakan'
-                          ? Container()
-                          : Container(
+                      roles == 'PETUGAS LAPANGAN' &&
+                              selectedStatus == 'Belum Dikerjakan'
+                          ? Container(
                               child: CustomFormField(
                                 title: 'Alasan belum dikerjakan',
                                 controller: alasanController,
                                 maxLinesText: 4,
                               ),
-                            ),
+                            )
+                          : Container(),
 
-                      Center(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Upload Foto Lokasi',
-                              style: blackTextStyle.copyWith(
-                                fontWeight: medium,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 12.0,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                selectImage();
-                              },
-                              child: Container(
-                                width: 120,
-                                height: 120,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: lightBackgroundColor,
-                                  image: selectedImage == null
-                                      ? null
-                                      : DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: FileImage(
-                                            File(
-                                              selectedImage!.path,
-                                            ),
-                                          ),
-                                        ),
-                                ),
-                                child: selectedImage != null
-                                    ? null
-                                    : Center(
-                                        child: Image.asset(
-                                          'assets/ic_upload.png',
-                                          width: 32,
-                                        ),
+                      roles == 'PETUGAS LAPANGAN'
+                          ? Center(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Upload Foto Lokasi',
+                                    style: blackTextStyle.copyWith(
+                                      fontWeight: medium,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 12.0,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      selectImage();
+                                    },
+                                    child: Container(
+                                      width: 120,
+                                      height: 120,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: lightBackgroundColor,
+                                        image: selectedImage == null
+                                            ? null
+                                            : DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: FileImage(
+                                                  File(
+                                                    selectedImage!.path,
+                                                  ),
+                                                ),
+                                              ),
                                       ),
+                                      child: selectedImage != null
+                                          ? null
+                                          : Center(
+                                              child: Image.asset(
+                                                'assets/ic_upload.png',
+                                                width: 32,
+                                              ),
+                                            ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
+                            )
+                          : Container(),
                       const SizedBox(
                         height: 12.0,
                       ),
 
-                      Center(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Upload Video Lokasi',
-                              style: blackTextStyle.copyWith(
-                                fontWeight: medium,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 12.0,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                selectVideo();
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                ),
-                                child: selectedVideo != null
-                                    ? Column(
-                                        children: [
-                                          AspectRatio(
-                                            aspectRatio:
-                                                _controller.value.aspectRatio,
-                                            child: VideoPlayer(_controller),
-                                          ),
-                                          Center(
-                                            child: IconButton(
-                                              icon: Icon(
-                                                _controller.value.isPlaying
-                                                    ? Icons.pause
-                                                    : Icons.play_arrow,
-                                                size: 30,
-                                              ),
-                                              color: Colors.blue,
-                                              onPressed: () {
-                                                setState(() {
-                                                  _controller.value.isPlaying
-                                                      ? _controller.pause()
-                                                      : _controller.play();
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    : Container(
-                                        height: 100,
-                                        child: Center(
-                                          child: Image.asset(
-                                            'assets/ic_upload.png',
-                                            width: 32,
-                                          ),
-                                        ),
+                      roles == 'PETUGAS LAPANGAN'
+                          ? Center(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Upload Video Lokasi',
+                                    style: blackTextStyle.copyWith(
+                                      fontWeight: medium,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 12.0,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      selectVideo();
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
                                       ),
+                                      child: selectedVideo != null
+                                          ? Column(
+                                              children: [
+                                                AspectRatio(
+                                                  aspectRatio: _controller
+                                                      .value.aspectRatio,
+                                                  child:
+                                                      VideoPlayer(_controller),
+                                                ),
+                                                Center(
+                                                  child: IconButton(
+                                                    icon: Icon(
+                                                      _controller
+                                                              .value.isPlaying
+                                                          ? Icons.pause
+                                                          : Icons.play_arrow,
+                                                      size: 30,
+                                                    ),
+                                                    color: Colors.blue,
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        _controller
+                                                                .value.isPlaying
+                                                            ? _controller
+                                                                .pause()
+                                                            : _controller
+                                                                .play();
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : Container(
+                                              height: 100,
+                                              child: Center(
+                                                child: Image.asset(
+                                                  'assets/ic_upload.png',
+                                                  width: 32,
+                                                ),
+                                              ),
+                                            ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
+                            )
+                          : Container(),
                       const SizedBox(
                         height: 24.0,
                       ),
 
-                      CustomFilledButton(
-                        title: 'Ubah Data Target Operasi',
-                        onPressed: () async {
-                          if (validate()) {
-                            var item = await databaseInstance
-                                .update(widget.work!.id!, {
-                              'keterangan_p2tl': selectedStatus,
-                              'alasan': alasanController.text,
-                              'image': image_path,
-                              'video': video_path,
-                            });
+                      roles == 'PETUGAS LAPANGAN'
+                          ? CustomFilledButton(
+                              title: 'Ubah Data Target Operasi',
+                              onPressed: () async {
+                                if (validate()) {
+                                  var item = await databaseInstance
+                                      .update(widget.work!.id!, {
+                                    'keterangan_p2tl': selectedStatus,
+                                    'alasan': alasanController.text,
+                                    'image': image_path,
+                                    'video': video_path,
+                                  });
 
-                            if (item != null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: const Text(
-                                    'Data Berhasil Dimasukkan',
-                                  ),
-                                  backgroundColor: greenColor,
-                                ),
-                              );
-                              setState(() {});
-                            }
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: const Text(
-                                  'Semua field harus diisi',
-                                ),
-                                backgroundColor: redColor,
-                              ),
-                            );
-                          }
-                        },
-                      ),
+                                  if (item != null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: const Text(
+                                          'Data Berhasil Dimasukkan',
+                                        ),
+                                        backgroundColor: greenColor,
+                                      ),
+                                    );
+                                    setState(() {});
+                                  }
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: const Text(
+                                        'Semua field harus diisi',
+                                      ),
+                                      backgroundColor: redColor,
+                                    ),
+                                  );
+                                }
+                              },
+                            )
+                          : Container(),
 
                       buildServices(context),
 

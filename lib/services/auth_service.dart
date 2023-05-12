@@ -49,9 +49,9 @@ class AuthService {
       );
 
       if (res.statusCode == 200) {
-        await clearLocalStorage();
         DatabaseInstance databaseInstance = DatabaseInstance();
         final res = await databaseInstance.deleteAll();
+        await clearLocalStorage();
       } else {
         throw jsonDecode(res.body)['message'];
       }

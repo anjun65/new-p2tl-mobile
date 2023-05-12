@@ -698,16 +698,44 @@ class DatabaseInstance {
       });
     }
 
-    var delete_form_kalibrasi =
-        await _database!.rawDelete("Delete from $table_kalibrasis");
-    var delete_form_pengambilan =
-        await _database!.rawDelete("Delete from $table_pengambilan");
-    var delete_form_langsung =
-        await _database!.rawDelete("Delete from $table_form_langsungs");
-    var delete_form_tidak_langsung =
-        await _database!.rawDelete("Delete from $table_form_tidak_langsungs");
+    // var databasesPath = await getDatabasesPath();
+    // String path = join(databasesPath, 'demo.db');
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, _databaseName);
 
-    var delete_work = await _database!.rawDelete("Delete from $table");
+    // Delete the database
+    await deleteDatabase(path);
+
+    // try {
+    //   final db = await database();
+    //   await db.transaction((txn) async {
+    //     var batch = txn.batch();
+    //     batch.delete(table_kalibrasis);
+    //     batch.delete(table_pengambilan);
+    //     batch.delete(table_form_langsungs);
+    //     batch.delete(table_form_tidak_langsungs);
+    //     batch.delete(table);
+    //     await batch.commit();
+    //   });
+    // } catch (error) {
+    //   throw Exception('DbBase.cleanDatabase: ' + error.toString());
+    // }
+    // print('2');
+    // var delete_form_kalibrasi = await _database!.delete(table_kalibrasis);
+
+    // print('2');
+    // var delete_form_pengambilan = await _database!.delete(table_pengambilan);
+    // print('3');
+    // var delete_form_langsung = await _database!.delete(table_form_langsungs);
+
+    // print('4');
+    // var delete_form_tidak_langsung =
+    //     await _database!.rawDelete("Delete from $table_form_tidak_langsungs");
+
+    // print('5');
+
+    // var delete_work = await _database!.rawDelete("Delete from $table");
+    // print('6');
   }
 
   final String baseUrl = 'https://p2tl.bright.id/api';
@@ -725,6 +753,7 @@ class DatabaseInstance {
             data.map((e) => WorkModel.fromJson(e)).toList();
 
         for (int index = 0; index < result.length; index++) {
+          print('masuk');
           WorkModel listItem = result[index];
 
           int? work_id = 0;
@@ -1424,147 +1453,163 @@ class DatabaseInstance {
               ..fields['akhir_temuan'] = ba.akhir_temuan.toString()
               ..fields['akhir_labor'] = ba.akhir_labor.toString();
 
-            if (ba.file_nomor_identitas != 'null') {
+            if (ba.file_nomor_identitas != 'null' &&
+                ba.file_nomor_identitas != null) {
               var multipartFile = await http.MultipartFile.fromPath(
                   'file_nomor_identitas', ba.file_nomor_identitas!);
 
               resWork.files.add(multipartFile);
             }
 
-            if (ba.data_lama_foto_kwh_meter != 'null') {
+            if (ba.data_lama_foto_kwh_meter != 'null' &&
+                ba.data_lama_foto_kwh_meter != null) {
               var multipartFile1 = await http.MultipartFile.fromPath(
                   'data_lama_foto_kwh_meter', ba.data_lama_foto_kwh_meter!);
 
               resWork.files.add(multipartFile1);
             }
 
-            if (ba.data_lama_foto_pembatas != 'null') {
+            if (ba.data_lama_foto_pembatas != 'null' &&
+                ba.data_lama_foto_pembatas != null) {
               var multipartFile2 = await http.MultipartFile.fromPath(
                   'data_lama_foto_pembatas', ba.data_lama_foto_pembatas!);
 
               resWork.files.add(multipartFile2);
             }
 
-            if (ba.data_baru_foto_kwh_meter != 'null') {
+            if (ba.data_baru_foto_kwh_meter != 'null' &&
+                ba.data_baru_foto_kwh_meter != null) {
               var multipartFile3 = await http.MultipartFile.fromPath(
                   'data_baru_foto_kwh_meter', ba.data_baru_foto_kwh_meter!);
 
               resWork.files.add(multipartFile3);
             }
 
-            if (ba.data_baru_foto_pembatas != 'null') {
+            if (ba.data_baru_foto_pembatas != 'null' &&
+                ba.data_baru_foto_pembatas != null) {
               var multipartFile4 = await http.MultipartFile.fromPath(
                   'data_baru_foto_pembatas', ba.data_baru_foto_pembatas!);
 
               resWork.files.add(multipartFile4);
             }
 
-            if (ba.kwh_foto_sebelum != 'null') {
+            if (ba.kwh_foto_sebelum != 'null' && ba.kwh_foto_sebelum != null) {
               var multipartFile5 = await http.MultipartFile.fromPath(
                   'kwh_foto_sebelum', ba.kwh_foto_sebelum!);
 
               resWork.files.add(multipartFile5);
             }
 
-            if (ba.kwh_foto_sesudah != 'null') {
+            if (ba.kwh_foto_sesudah != 'null' && ba.kwh_foto_sesudah != null) {
               var multipartFile6 = await http.MultipartFile.fromPath(
                   'kwh_foto_sesudah', ba.kwh_foto_sesudah!);
 
               resWork.files.add(multipartFile6);
             }
 
-            if (ba.terminal_foto_sebelum != 'null') {
+            if (ba.terminal_foto_sebelum != 'null' &&
+                ba.terminal_foto_sebelum != null) {
               var multipartFile7 = await http.MultipartFile.fromPath(
                   'terminal_foto_sebelum', ba.terminal_foto_sebelum!);
 
               resWork.files.add(multipartFile7);
             }
 
-            if (ba.terminal_foto_sesudah != 'null') {
+            if (ba.terminal_foto_sesudah != 'null' &&
+                ba.terminal_foto_sesudah != null) {
               var multipartFile8 = await http.MultipartFile.fromPath(
                   'terminal_foto_sesudah', ba.terminal_foto_sesudah!);
 
               resWork.files.add(multipartFile8);
             }
 
-            if (ba.pelindung_kwh_foto_sebelum != 'null') {
+            if (ba.pelindung_kwh_foto_sebelum != 'null' &&
+                ba.pelindung_kwh_foto_sebelum != null) {
               var multipartFile9 = await http.MultipartFile.fromPath(
                   'pelindung_kwh_foto_sebelum', ba.pelindung_kwh_foto_sebelum!);
 
               resWork.files.add(multipartFile9);
             }
 
-            if (ba.pelindung_kwh_foto_sesudah != 'null') {
+            if (ba.pelindung_kwh_foto_sesudah != 'null' &&
+                ba.pelindung_kwh_foto_sesudah != null) {
               var multipartFile10 = await http.MultipartFile.fromPath(
                   'pelindung_kwh_foto_sesudah', ba.pelindung_kwh_foto_sesudah!);
 
               resWork.files.add(multipartFile10);
             }
 
-            if (ba.busbar_foto_sebelum != 'null') {
+            if (ba.busbar_foto_sebelum != 'null' &&
+                ba.busbar_foto_sebelum != null) {
               var multipartFile11 = await http.MultipartFile.fromPath(
                   'busbar_foto_sebelum', ba.busbar_foto_sebelum!);
 
               resWork.files.add(multipartFile11);
             }
 
-            if (ba.busbar_foto_sesudah != 'null') {
+            if (ba.busbar_foto_sesudah != 'null' &&
+                ba.busbar_foto_sesudah != null) {
               var multipartFile12 = await http.MultipartFile.fromPath(
                   'busbar_foto_sesudah', ba.busbar_foto_sesudah!);
 
               resWork.files.add(multipartFile12);
             }
 
-            if (ba.papan_ok_foto_sebelum != 'null') {
+            if (ba.papan_ok_foto_sebelum != 'null' &&
+                ba.papan_ok_foto_sebelum != null) {
               var multipartFile13 = await http.MultipartFile.fromPath(
                   'papan_ok_foto_sebelum', ba.papan_ok_foto_sebelum!);
 
               resWork.files.add(multipartFile13);
             }
 
-            if (ba.papan_ok_foto_sesudah != 'null') {
+            if (ba.papan_ok_foto_sesudah != 'null' &&
+                ba.papan_ok_foto_sesudah != null) {
               var multipartFile14 = await http.MultipartFile.fromPath(
                   'papan_ok_foto_sesudah', ba.papan_ok_foto_sesudah!);
 
               resWork.files.add(multipartFile14);
             }
 
-            if (ba.mcb_foto_sebelum != 'null') {
+            if (ba.mcb_foto_sebelum != 'null' && ba.mcb_foto_sebelum != null) {
               var multipartFile15 = await http.MultipartFile.fromPath(
                   'mcb_foto_sebelum', ba.mcb_foto_sebelum!);
 
               resWork.files.add(multipartFile15);
             }
 
-            if (ba.mcb_foto_sesudah != 'null') {
+            if (ba.mcb_foto_sesudah != 'null' && ba.mcb_foto_sesudah != null) {
               var multipartFile16 = await http.MultipartFile.fromPath(
                   'mcb_foto_sesudah', ba.mcb_foto_sesudah!);
 
               resWork.files.add(multipartFile16);
             }
 
-            if (ba.pemeriksaan_foto_sebelum != 'null') {
+            if (ba.pemeriksaan_foto_sebelum != 'null' &&
+                ba.pemeriksaan_foto_sebelum != null) {
               var multipartFile17 = await http.MultipartFile.fromPath(
                   'pemeriksaan_foto_sebelum', ba.pemeriksaan_foto_sebelum!);
 
               resWork.files.add(multipartFile17);
             }
 
-            if (ba.wiring_foto != 'null') {
+            if (ba.wiring_foto != 'null' && ba.wiring_foto != null) {
               var multipartFile18 = await http.MultipartFile.fromPath(
                   'wiring_foto', ba.wiring_foto!);
 
               resWork.files.add(multipartFile18);
             }
 
-            if (ba.akhir_foto_barang_bukti != 'null') {
+            if (ba.akhir_foto_barang_bukti != 'null' &&
+                ba.akhir_foto_barang_bukti != null) {
               var multipartFile19 = await http.MultipartFile.fromPath(
                   'akhir_foto_barang_bukti', ba.akhir_foto_barang_bukti!);
 
               resWork.files.add(multipartFile19);
             }
 
-            if (ba.akhir_kesimpulan_video != 'null') {
+            if (ba.akhir_kesimpulan_video != 'null' &&
+                ba.akhir_kesimpulan_video != null) {
               var multipartFile25 = await http.MultipartFile.fromPath(
                   'kesimpulan_video', ba.akhir_kesimpulan_video!);
 

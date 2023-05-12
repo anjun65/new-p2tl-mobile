@@ -430,6 +430,8 @@ class _PemeriksaanPengukuranFormTidakLangsungPage
                               'pengukuran_foto': imagePath,
                             });
 
+                            print(item);
+
                             if (item != 0) {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (builder) {

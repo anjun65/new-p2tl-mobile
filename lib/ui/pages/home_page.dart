@@ -52,6 +52,8 @@ class _HomePageState extends State<HomePage> {
     databaseInstance = DatabaseInstance();
     initDatabase();
 
+    getRoles();
+
     // TODO: implement initState
     super.initState();
   }
